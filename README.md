@@ -1,4 +1,0 @@
-SYC
-===
-
-SYC TEAM
