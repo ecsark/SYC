@@ -1,9 +1,6 @@
 package org.syc.rhapsody.common;
 
-import java.util.Collections;
-
 public class SodFactory {
-
 	
 	/*
 	 * @param pitchName e.g. 4C#
@@ -11,10 +8,10 @@ public class SodFactory {
 	 * @param extra dotted
 	 * @return a note
 	 */	
-	public static Note newNote(String pitchName, int type, M... extras) throws ParserException
+	public static Sod newNote(String pitchName, int type, M... extras) throws ParserException
 	{
 		Pitch pitch= new Pitch(pitchName);
-				
+		Tone tone = new Tone(pitch);
 		Duration dur = new Duration(type);
 		for(M extra:extras){
 			switch(extra){
@@ -22,10 +19,7 @@ public class SodFactory {
 			default: break;
 			}
 		}
-		Note note = new Note();
-		note.duration = dur;
-		note.pitch = pitch;
-		return note;
+		return new Sod(tone,dur);
 	}
 	
 	/*
@@ -34,13 +28,12 @@ public class SodFactory {
 	 * @param extra dotted	 * 
 	 * @return a chord
 	 */
-	public static Chord newChord(String[] pitchNameList, int type, M... extras) throws ParserException{
-		Chord chord = new Chord();
+	public static Sod newChord(String[] pitchNameList, int type, M... extras) throws ParserException{
+		Tone tone = new Tone();
 		for(String pitchName:pitchNameList){
 			Pitch pitch= new Pitch(pitchName);			
-			chord.pitches.add(pitch);			
+			tone.addPitch(pitch);			
 		}
-		Collections.sort(chord.pitches);
 		Duration dur = new Duration(type);
 		
 		for(M extra:extras){
@@ -49,8 +42,7 @@ public class SodFactory {
 			default: break;
 			}
 		}
-		chord.duration = dur;
-		return chord;
+		return new Sod(tone,dur);
 	}
 	
 	/*
@@ -58,8 +50,8 @@ public class SodFactory {
 	 * @param extra dotted
 	 * @return a rest
 	 */
-	public static Rest newRest(int type, M... extras){
-		Rest rest = new Rest();
+	public static Sod newRest(int type, M... extras){
+		Tone tone = new Tone();
 		Duration dur = new Duration(type);
 		for(M extra:extras){
 			switch(extra){
@@ -67,7 +59,7 @@ public class SodFactory {
 			default: break;
 			}
 		}
-		return rest;
+		return new Sod(tone,dur);
 	}
 	
 
