@@ -81,16 +81,17 @@ public class ComposingTest {
 
 	@Test
 	public void testTonicChord(){
-		KeySignature ks;
 		try {
-			ks = new KeySignature("E",M.MAJOR);
-			/*Iterator<Pitch> iter = ks.pitchPool.iterator();
-			while(iter.hasNext()){
-				System.out.println(iter.next().toText(true));
-			}*/
-		} catch (ParserException e) {
+			KeySignature ks = new KeySignature("C", M.MAJOR);
+			Progression prog = new Progression(ks);
+			MeasureAnalyzer ma = new MeasureAnalyzer(sentence.measures, prog);
+			ma.analyze();
+			ma.showChords();
+		} catch (ParserException | AnalyzerException e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 	

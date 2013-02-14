@@ -10,12 +10,41 @@ import org.syc.rhapsody.common.*;
 
 public class MeasureAnalyzer {
 	
-	ArrayList<Measure> measures;
-	ArrayList<Chord> acchords;
+	protected ArrayList<Measure> measures;
+	protected Progression progression;
+	//ArrayList<Chord> acchords;
+	protected ArrayList<HashMap<Chord,Integer>> chords;
 	
-	public MeasureAnalyzer(ArrayList<Measure> measures){
+	
+	public MeasureAnalyzer(ArrayList<Measure> measures, Progression prog){
 		this.measures = measures;
+		this.progression = prog;
+		chords = new ArrayList<HashMap<Chord,Integer>>();
 	}
+	
+	public void showChords(){
+		for(HashMap<Chord,Integer> beatChords : chords){
+			Iterator<Entry<Chord,Integer>> iter = beatChords.entrySet().iterator();
+			while(iter.hasNext()){
+				Map.Entry<Chord,Integer> entry = (Map.Entry<Chord,Integer>) iter.next();
+				System.out.print(" "+entry.getKey().toString()+":"+Integer.toString(entry.getValue()));
+			}
+			System.out.println();
+		}
+	}
+	
+	public void analyze() throws AnalyzerException, ParserException{
+		for(Measure m : measures)
+			chords.addAll(analyzeMeasure(m, 1));
+		
+		for(HashMap<Chord,Integer> beatChords : chords)
+			progression.eliminateChord(beatChords);
+			//progression.eliminateOvertoneChord(beatChords);
+		
+		
+	}
+	
+	
 	
 	private static void mergeChord(HashMap<Chord,Integer> sum, HashMap<Chord,Integer> nm){
 		Iterator<Entry<Chord,Integer>> iter = nm.entrySet().iterator(); 
@@ -44,11 +73,9 @@ public class MeasureAnalyzer {
 				mergeChord(chords,sc);
 				sc = sod.getChords(ChordStrategy.MinorTriad);
 				mergeChord(chords,sc);
-			}
-			
+			}			
 			chordCol.add(chords);
-		}
-		
+		}		
 		return chordCol;
 	}
 	

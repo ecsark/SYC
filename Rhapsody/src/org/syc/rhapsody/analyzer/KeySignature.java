@@ -1,6 +1,7 @@
 package org.syc.rhapsody.analyzer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -9,6 +10,7 @@ import org.syc.rhapsody.common.*;
 public class KeySignature {
 	
 	private Pitch tonic;
+	@SuppressWarnings("unused")
 	private M mode;
 	
 	private HashMap<String,ArrayList<Pitch>> chordPool = new HashMap<String,ArrayList<Pitch>>();
@@ -37,7 +39,7 @@ public class KeySignature {
 		}
 	}
 
-	
+	//norm
 	public ArrayList<Pitch> getChord(String chordName) throws ParserException{
 		if(chordPool.containsKey(chordName))
 			return chordPool.get(chordName);
@@ -51,6 +53,7 @@ public class KeySignature {
 			root = root.getPitchByIntervalUp(s);
 			pitches.add(root);
 		}
+		Collections.sort(pitches);
 		chordPool.put(chordName, pitches);
 		return pitches;
 	}

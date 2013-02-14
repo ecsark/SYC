@@ -10,9 +10,13 @@ public class Pitch implements Comparable<Pitch>{
 	
 	static{
 		interval = new HashMap<String,Integer>();
-		String[] itvn = {"P1","m2","M2","m3","M3","P4","A4","d5","P5","m6","M6","m7","M7","P8"};
-		for(int i=0; i<itvn.length; ++i)
-			interval.put(itvn[i], i);		
+		String[] itvn = {"P1","m2","M2","m3","M3","P4","A4","P5","m6","M6","m7","M7","P8"};
+		String[] itvn2 = {"d2","A1","d3","A2","d4","A3","d5","d6","A5","d7","A6","d8","A7"};
+		for(int i=0; i<itvn.length; ++i){
+			interval.put(itvn[i], i);
+			interval.put(itvn2[i],i);
+		}
+		
 	}
 	
 	private Pitch(int pit){
@@ -134,7 +138,7 @@ public class Pitch implements Comparable<Pitch>{
 
 	@Override
 	public int compareTo(Pitch p) {
-		return this.pit - p.pit;
+		return this.pit%12 - p.pit%12;
 	}
 	
 	@Override

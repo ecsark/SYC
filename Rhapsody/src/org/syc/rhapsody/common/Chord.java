@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class Chord extends Sod{
-	ArrayList<Pitch> pitches;
+	public ArrayList<Pitch> pitches;
 
 	public Chord(){
 		pitches = new ArrayList<>();
@@ -49,6 +49,9 @@ public class Chord extends Sod{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -58,6 +61,32 @@ public class Chord extends Sod{
 	}
 
 
+	/*@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Chord))
+			return false;
+		Chord other = (Chord) obj;
+		if (pitches == null) {
+			if (other.pitches != null)
+				return false;
+		} else{
+			ArrayList<Pitch> minus = new ArrayList<Pitch>();
+			minus.addAll(pitches);
+			minus.retainAll(other.pitches);
+			if(minus.size()!=pitches.size())
+				return false;
+		
+		}
+		return true;
+	}*/
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -74,7 +103,7 @@ public class Chord extends Sod{
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString(){
 		String s = "(";
