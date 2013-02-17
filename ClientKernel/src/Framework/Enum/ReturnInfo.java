@@ -7,6 +7,6 @@ public enum ReturnInfo
 {
 	SUCCESS,
 	FAIL,
-	NETWORK_ERROR,
+	IO_EXCEPTION,
 	CLASS_NOT_FOUND;
 }

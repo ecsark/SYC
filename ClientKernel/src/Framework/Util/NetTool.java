@@ -22,46 +22,99 @@ public class NetTool
 	
 	public static ReturnInfo send(int cmd, Object obj, String userId)
 	{
-		return ReturnInfo.SUCCESS;
+		try
+		{	
+			Socket socket=new Socket(serverIP, serverPort);
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			//send cmd
+			oos.writeObject(cmd);
+			oos.flush();
+			//send userID
+			oos.writeObject(userId);
+			oos.flush();
+			//send outObj
+			oos.writeObject(obj);
+			oos.flush();
+			//receive confirmation
+			ReturnInfo returnInfo = (ReturnInfo)ois.readObject();
+			socket.close();
+			return returnInfo;
+		} 
+		catch (IOException e)
+		{
+			return ReturnInfo.IO_EXCEPTION;
+		} 
+		catch (ClassNotFoundException e) {
+			return ReturnInfo.CLASS_NOT_FOUND;
+		} 
 	}
 	
 	public static Object Receive(int cmd, String userId)
 	{
-		return ReturnInfo.SUCCESS;
+		try
+		{	
+			Socket socket=new Socket(serverIP, serverPort);
+		
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			//send cmd
+			oos.writeObject(cmd);
+			oos.flush();
+			//send userId
+			oos.writeObject(userId);
+			oos.flush();
+			//receive inObj
+			Object inObj = ois.readObject();
+			//send confirmation
+			oos.writeObject(ReturnInfo.SUCCESS);
+			oos.flush();
+			socket.close();
+			return inObj;
+		} 
+		catch(IOException e)
+		{
+			return null;
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return null;
+		}
 	}
 	
 	public static Object Receive(int cmd, String[] args, String userId )
 	{
-		return ReturnInfo.SUCCESS;
-	}
-	//先获取inObj,然后传出cmd和outObj,最后接收server成功信息
-	public static ReturnInfo connect(Object outObj, Object inObj, Command cmd)
-	{
 		try
 		{	
 			Socket socket=new Socket(serverIP, serverPort);
-
-			if(inObj != null)
-			{
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				inObj = ois.readObject();
-			}
+		
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			//send cmd
 			oos.writeObject(cmd);
-			oos.writeObject(outObj);
 			oos.flush();
-			ObjectInputStream oisRtn = new ObjectInputStream(socket.getInputStream());
-			ReturnInfo rtnInfo = (ReturnInfo)oisRtn.readObject();
+			//send userId
+			oos.writeObject(userId);
+			oos.flush();
+			//send args
+			oos.writeObject(args);
+			oos.flush();
+			//receive inObj
+			Object inObj = ois.readObject();
+			//send confirmation
+			oos.writeObject(ReturnInfo.SUCCESS);
+			oos.flush();
 			socket.close();
-			return rtnInfo;
+			return inObj;
 		} 
 		catch(IOException e)
 		{
-			return ReturnInfo.NETWORK_ERROR;
-		}
-		catch(ClassNotFoundException e)
+			return null;
+		} 
+		catch (ClassNotFoundException e) 
 		{
-			return ReturnInfo.CLASS_NOT_FOUND;
+			return null;
 		}
 	}
+
 }
