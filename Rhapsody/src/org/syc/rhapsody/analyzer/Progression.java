@@ -19,14 +19,34 @@ public class Progression {
 	Progression(KeyAnalyzer ka){
 		this.ka = ka;
 		try {
-			load();
+			load1642561();
 		} catch (ParserException e) {
 			System.err.println("Pitch alternation symbolic error");
 			e.printStackTrace();
 		}
 	}
 	
-	void load() throws ParserException{
+	void load1642561() throws ParserException{
+		alternation = new HashMap<Tone, HashMap<Tone,Effect>>();
+		String[] loop = {"I","VI","IV","II","V","VI","I"};
+		Effect eff = new Effect();
+		for(int i=0; i<loop.length; ++i){
+			Tone fr = ka.getChord(loop[i]);
+			HashMap<Tone,Effect> t = new HashMap<Tone, Effect>();
+			for(int j=i; j<loop.length; ++j){
+				Tone to = ka.getChord(loop[j]);
+				t.put(to, eff);
+			}
+			if(!alternation.containsKey(fr))
+				alternation.put(fr, t);
+			else{
+				HashMap<Tone,Effect> tt = alternation.get(fr);
+				tt.putAll(t);
+			}
+		}
+	}
+	
+	void load145() throws ParserException{
 		alternation = new HashMap<Tone, HashMap<Tone,Effect>>();
 		
 		Tone tone1 = ka.getChord("I");
@@ -56,35 +76,6 @@ public class Progression {
 	HashMap<Tone,Effect> next(Tone current){
 		return alternation.get(current);
 	}
-	
-	/*
-	private static ArrayList<Pair<String, Integer>> circle;
-	static
-	{	
-		circle = new ArrayList<Pair<String,Integer>>();
-		circle.add(new Pair<String,Integer>("I",3));
-		circle.add(new Pair<String,Integer>("VI",2));
-		circle.add(new Pair<String,Integer>("IV",3));
-		circle.add(new Pair<String,Integer>("II",2));
-		circle.add(new Pair<String,Integer>("V",3));
-		circle.add(new Pair<String,Integer>("VI",2));
-	}
-	
-	
-	
-	private void convert() throws ParserException{
-		alternation = new HashMap<Tone, HashMap<Tone,Integer>>();
-		int len = circle.size();
-		for(int i=0; i<len; ++i){
-			Tone from = ka.getChord(circle.get(i).a);
-			HashMap<Tone,Integer> trans = new HashMap<Tone, Integer>();
-			for(int j=0; j<len-2; ++j){
-				Tone to = ka.getChord(circle.get((i+j)%len).a);
-				trans.put(to, circle.get((i+j)%len).b);
-			}
-			alternation.put(from, trans);
-		}
-	}*/
 	
 	
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Pitch implements Comparable<Pitch>{	
 
-	private int pit;
+	protected int pit;
 	
 	private static HashMap<String, Integer> interval;
 	
@@ -17,6 +17,10 @@ public class Pitch implements Comparable<Pitch>{
 			interval.put(itvn2[i],i);
 		}
 		
+	}
+	
+	protected Pitch(Pitch p){
+		pit = p.pit;
 	}
 	
 	private Pitch(int pit){
@@ -159,23 +163,23 @@ public class Pitch implements Comparable<Pitch>{
 		}
 		if(sharp==true){
 			switch(pit%12){
-			case 1: text = "#C"; break;
-			case 3: text = "#D"; break;
-			case 6: text = "#F"; break;
-			case 8: text = "#G"; break;
-			case 10: text = "#A"; break;
+			case 1: text = "C#"; break;
+			case 3: text = "D#"; break;
+			case 6: text = "F#"; break;
+			case 8: text = "G#"; break;
+			case 10: text = "A#"; break;
 			}
 		}
 		else{
 			switch(pit%12){
-			case 1: text = "bD"; break;
-			case 3: text = "bE"; break;
-			case 6: text = "bG"; break;
-			case 8: text = "bA"; break;
-			case 10: text = "bB"; break;
+			case 1: text = "Db"; break;
+			case 3: text = "Eb"; break;
+			case 6: text = "Gb"; break;
+			case 8: text = "Ab"; break;
+			case 10: text = "Bb"; break;
 			}
 		}
-		return text;
+		return text+Integer.toString(getBase());
 	}
 }
 

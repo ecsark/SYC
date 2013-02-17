@@ -8,6 +8,7 @@ public class Duration {
 		time = 0;
 	}
 	
+	//defines the duration of a note
 	public Duration(int type){
 		time = (float)4/type;
 	}

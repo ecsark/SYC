@@ -12,27 +12,27 @@ import org.syc.rhapsody.analyzer.*;
 public class ComposingTest {
 
 	BlueElf be;
+	Converter conv;
 	
 	@Before
 	public void setUp(){
-		be = new BlueElf();		
+		be = new BlueElf();
+		conv = new Converter();
 	}
-	
+
 	
 	//@Test
-	public void hashTest(){
-		HashSet<Pitch> ps = new HashSet<Pitch>();
+	public void converterTest(){
 		
 		try {
-			Pitch p1 = new Pitch("4C"), p2 = new Pitch("5C");
-			ps.add(p1);
-			System.out.println(ps.contains(p2));
+			conv.addMeasures(be.sentence.measures,1);
+			conv.play();
 		} catch (ParserException e) {
 			e.printStackTrace();
-		}		
+		}
+		
 	}
-
-
+	
 	//@Test
 	public void test() {
 		try {
@@ -56,6 +56,34 @@ public class ComposingTest {
 		try {
 			MeasureAnalyzer ma = new MeasureAnalyzer(be.sentence.measures, "C", M.MAJOR);
 			ma.analyze();
+			ArrayList<ArrayList<Tone>> progressions = ma.getProgressions();
+			
+			//print
+			for(int i=0; i<progressions.size();++i){
+				System.out.print(Integer.toString(i)+": ");
+				for(Tone h:progressions.get(i))
+					System.out.print(" "+h+" ");
+				System.out.println();
+			}
+			
+			ArrayList<Tone> prog = progressions.get(8);//only test the 14th progression
+			
+			ArrayList<Measure> chorus = new ArrayList<Measure>();
+			Measure r = new Measure();
+			r.add(SodFactory.newRest(8));
+			chorus.add(r);
+			for(int i=1; i<prog.size(); ++i){//skip the first measure
+				Measure ch = new Measure();
+				Sod chord = new Sod(prog.get(i), new Duration(2));
+				ch.add(chord);
+				chorus.add(ch);
+			}
+			
+			conv.addMeasures(be.sentence.measures,1);
+			conv.addMeasures(chorus, 2);
+			
+			conv.play();
+			
 		} catch (ParserException | AnalyzerException e) {
 			e.printStackTrace();
 		}

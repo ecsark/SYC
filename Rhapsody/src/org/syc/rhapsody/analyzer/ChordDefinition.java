@@ -16,9 +16,15 @@ public class ChordDefinition {
 	
 	static{
 		TriadMap = new HashMap<String,Pair<String,String[]>>();
+		
 		TriadMap.put("I", new Pair<String, String[]>("P1", MajorTriad));
+		TriadMap.put("II", new Pair<String, String[]>("M2", MinorTriad));
+		TriadMap.put("III", new Pair<String, String[]>("M3", MinorTriad));
 		TriadMap.put("IV",  new Pair<String, String[]>("P4", MajorTriad));
 		TriadMap.put("V", new Pair<String, String[]>("P5", MajorTriad));
+		TriadMap.put("VI", new Pair<String, String[]>("M6", MinorTriad));
+		TriadMap.put("VII", new Pair<String, String[]>("M7", DiminishedTriad));
+		
 		TriadMap.put("i", new Pair<String, String[]>("P1", MinorTriad));
 		TriadMap.put("iv", new Pair<String, String[]>("P4", MinorTriad));
 		TriadMap.put("v", new Pair<String, String[]>("P5", MinorTriad));		

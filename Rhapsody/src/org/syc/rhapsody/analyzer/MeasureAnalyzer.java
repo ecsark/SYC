@@ -1,6 +1,7 @@
 package org.syc.rhapsody.analyzer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +19,11 @@ public class MeasureAnalyzer {
 	
 	protected ArrayList<Measure> measures;
 	protected ArrayList<HashMap<Tone,Integer>> chords;
+	protected ArrayList<ArrayList<Tone>> progressions;
+	
+	public ArrayList<ArrayList<Tone>> getProgressions(){
+		return progressions;
+	}
 	
 	private static String[][] seedChords = {ChordDefinition.MajorTriad, ChordDefinition.MinorTriad,
 		ChordDefinition.AugmentedTriad,ChordDefinition.DiminishedTriad};
@@ -48,17 +54,26 @@ public class MeasureAnalyzer {
 		//for(HashMap<Tone,Integer> beatChords : chords)
 			//ca.eliminateChord(beatChords);
 		
+		progressions = new ArrayList<ArrayList<Tone>>();
+		
 		Tone start = ka.getChord("I");
 		ArrayList<Tone> history = new ArrayList<Tone>();
 		history.add(start);
 		progress(history, 1, 0);
+		
+		for(ArrayList<Tone> tones : progressions){
+			for(Tone tone : tones)
+				tone.toNorm();
+		}
 	}
+	
 	
 	
 	//DFS
 	private void progress(ArrayList<Tone> history, int index, int rate){
-		if(index == chords.size()){			
-			printHistory(history, rate);
+		if(index == chords.size()){
+			//printHistory(history, rate);
+			progressions.add(history);
 			return;
 		}
 		Tone prev = history.get(index-1);
@@ -72,9 +87,9 @@ public class MeasureAnalyzer {
 			ArrayList<Tone> nhist = (ArrayList<Tone>) history.clone();
 			nhist.add(cur);
 			progress(nhist,index+1, rate+r);
-		}
-			
+		}			
 	}
+	
 	
 	private void printHistory(ArrayList<Tone> history, int rate){
 		for(Tone h:history)

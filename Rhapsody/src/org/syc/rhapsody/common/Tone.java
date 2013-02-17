@@ -69,7 +69,7 @@ public class Tone{
 		for(int idx=0; idx<strategy.length+1; ++idx){
 			Tone ps = new Tone();
 			
-			Pitch iter = pitch;
+			Pitch iter = new Pitch(pitch);
 			for(int j=0; j<idx; ++j){
 				iter = iter.getPitchByIntervalDown(strategy[idx-1-j]);
 				ps.addPitch(iter);
@@ -97,9 +97,12 @@ public class Tone{
 			HashMap<Tone,Integer> chords = new HashMap<Tone,Integer>();
 			chords.put(this, 1);
 			return chords;
-		}
-		
+		}		
 	}
 	
+	public void toNorm(){
+		for(Pitch p : pits)
+			p.setBase(4);
+	}
 }
 

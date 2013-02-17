@@ -12,7 +12,7 @@ public class BlueElf {
 		rhythm = new Rhythm(4,2);
 		try {
 			m1_5();
-			m6_16();//not work on 8th measure
+			//m6_16();//not work on 8th measure
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
@@ -30,6 +30,7 @@ public class BlueElf {
 	}
 	
 	private void m1_5() throws ParserException{
+		
 		addNote(new String[]{"4E","4F"}, new int[]{16,16});
 		addNote(new String[]{"4G","4F","4E","4F"}, new int[]{8,8,8,8});
 		addNote(new String[]{"4G","4F","4E","4F"}, new int[]{8,8,8,8});
