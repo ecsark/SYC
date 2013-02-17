@@ -3,4 +3,4 @@ SYC
 
 SYC TEAM
 
-Rhapsody is a automated music accompaniment generating program.
+Rhapsody is an automated music accompaniment generating program.
