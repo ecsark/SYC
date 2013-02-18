@@ -66,17 +66,22 @@ public class ComposingTest {
 				System.out.println();
 			}
 			
-			ArrayList<Tone> prog = progressions.get(8);//only test the 14th progression
+			ArrayList<Tone> prog = progressions.get(32);//only test the 14th progression
 			
 			ArrayList<Measure> chorus = new ArrayList<Measure>();
 			Measure r = new Measure();
 			r.add(SodFactory.newRest(8));
 			chorus.add(r);
 			for(int i=1; i<prog.size(); ++i){//skip the first measure
-				Measure ch = new Measure();
+				/*Measure ch = new Measure();
+				
 				Sod chord = new Sod(prog.get(i), new Duration(2));
 				ch.add(chord);
-				chorus.add(ch);
+				chorus.add(ch);*/
+				
+				SimpleAccompaniment accpn = new SimpleAccompaniment(prog.get(i), be.rhythm);
+				accpn.expand();
+				chorus.add(accpn);
 			}
 			
 			conv.addMeasures(be.sentence.measures,1);
@@ -86,10 +91,34 @@ public class ComposingTest {
 			
 		} catch (ParserException | AnalyzerException e) {
 			e.printStackTrace();
-		}
-		
-		
+		}		
+	}	
+	
+}
+
+class SimpleAccompaniment extends Measure{
+	private Tone chord;
+	
+	SimpleAccompaniment(Tone chord, Rhythm rhythm) throws AnalyzerException{
+		super(rhythm);
+		if(chord.pits.size()<3)
+			throw new AnalyzerException("A chord must consist of at least three notes!");
+		this.chord = chord;
 	}
 	
-	
+	public void expand() throws AnalyzerException{
+		Tone root = new Tone(chord.pits.get(0));
+		Tone trunk = new Tone();
+		for(int i=1; i<chord.pits.size(); ++i){
+			trunk.addPitch(chord.pits.get(i));
+		}
+		if(rhythm.beats == 0 || rhythm.unit == 0)
+			throw new AnalyzerException("Rhythm has to be redefined!");
+		Duration dur = new Duration(rhythm.unit*2);
+		for(int i=0; i<rhythm.beats; ++i){
+			sods.add(new Sod(root, dur));
+			sods.add(new Sod(trunk, dur));
+			
+		}
+	}
 }

@@ -4,8 +4,8 @@ import org.syc.rhapsody.common.*;
 
 public class BlueElf {
 	
-	Sentence sentence;
-	Rhythm rhythm;
+	public Sentence sentence;
+	public Rhythm rhythm;
 	
 	BlueElf(){
 		sentence = new Sentence();

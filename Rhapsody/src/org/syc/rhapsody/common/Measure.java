@@ -7,7 +7,17 @@ public class Measure {
 	
 	public Rhythm rhythm;
 	
-	public ArrayList<Sod> sods = new ArrayList<Sod>();
+	public ArrayList<Sod> sods;
+	
+	public Measure(){
+		 sods = new ArrayList<Sod>();
+		 rhythm = new Rhythm();
+	}
+	
+	public Measure(Rhythm rhythm){
+		sods = new ArrayList<Sod>();
+		this.rhythm =rhythm;  
+	}
 	
 	public void add(Sod sod){
 		sods.add(sod);

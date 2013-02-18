@@ -22,7 +22,8 @@ public class Converter {
 	}
 	
 	public void saveMidi(File file) throws IOException{
-		sync();
+		//sync();
+		beTweak();
 		player.saveMidi(pattern, file);
 	}
 	
