@@ -11,7 +11,7 @@ import org.syc.rhapsody.common.*;
 
 public class MeasureAnalyzer {
 	
-	private ChordAnalyzer ca;
+	//private ChordAnalyzer ca;
 	private KeyAnalyzer ka;
 	private Progression pg;
 	
@@ -32,7 +32,7 @@ public class MeasureAnalyzer {
 	public MeasureAnalyzer(ArrayList<Measure> measures, String tonicName, M mode) throws ParserException{
 		this.measures = measures;
 		ka = new KeyAnalyzer(tonicName, mode);		
-		ca = new ChordAnalyzer(ka);
+		//ca = new ChordAnalyzer(ka);
 		pg = new Progression(ka);
 		chords = new ArrayList<HashMap<Tone,Integer>>();
 	}

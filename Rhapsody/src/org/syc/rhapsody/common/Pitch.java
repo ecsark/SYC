@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Pitch implements Comparable<Pitch>{	
 
-	protected int pit;
+	public int pit;
 	
 	private static HashMap<String, Integer> interval;
 	
