@@ -6,7 +6,7 @@ package Framework.Const;
 public enum ReturnInfo 
 {
 	SUCCESS,
-	FAIL,
+	UNKNOWN_EXPECTION,
 	IO_EXCEPTION,
 	CLASS_NOT_FOUND;
 }

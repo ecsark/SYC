@@ -4,6 +4,7 @@ package Framework.Kernel;
 import Framework.Const.Command;
 import Framework.Const.ReturnInfo;
 import Framework.Item.Item;
+import Framework.Item.ItemList;
 import Framework.Item.Money;
 import Framework.Util.NetTool;
 
@@ -15,8 +16,15 @@ public class Interface
 	///交易相关
 	public static ReturnInfo getTransItemList()
 	{
-		auction.list = (TransactionItemList)NetTool.Receive(auction.getType, auction.searchArgs, user.id);
-		return ReturnInfo.SUCCESS;
+		Object inObj = NetTool.Receive(auction.getType, auction.searchArgs, user.id);
+		if(inObj != null)
+		{
+			auction.list = (TransactionItemList)inObj;
+			return ReturnInfo.SUCCESS;
+		}
+		else{
+			return ReturnInfo.UNKNOWN_EXPECTION;
+		}
 	}
 	/*fin*/
 	/**ATTENTION: UI must refresh the List & auction UI after this func**/
@@ -41,9 +49,17 @@ public class Interface
 	///奖励
 	public static ReturnInfo getMoney()
 	{
-		user.property.set((Money)NetTool.Receive(Command.GET_MONEY, user.id));
-		return ReturnInfo.SUCCESS;
+		Object inObj = NetTool.Receive(Command.GET_MONEY, user.id);
+		if(inObj != null)
+		{
+			user.property.set((Money)inObj);
+			return ReturnInfo.SUCCESS;
+		}
+		else {
+			return ReturnInfo.UNKNOWN_EXPECTION;
+		}
 	}
+	///=========================================================================
 	///User相关
 	/*fin*/
 	public static  ReturnInfo login()
@@ -72,11 +88,42 @@ public class Interface
 	}
 	public static ReturnInfo refreshUser()
 	{
-		user = (User)NetTool.Receive(Command.REFRESH_USER, user.id);
-		return ReturnInfo.SUCCESS;
+		Object inObj = NetTool.Receive(Command.REFRESH_USER, user.id);
+		if(inObj != null)
+		{
+			user = (User)inObj;
+			return ReturnInfo.SUCCESS;
+		}
+		else {
+			return ReturnInfo.UNKNOWN_EXPECTION;
+		}
 	}
+	/*fin*/
+	/**ATTENTION: When the server error occurs, the func also return false**/
 	public static boolean hasTheSameName()
 	{
-		return (boolean)NetTool.Receive(Command.HAS_THE_SAME_NAME, user.id);
+		Object inObj = NetTool.Receive(Command.HAS_THE_SAME_NAME, user.id);
+		if(inObj != null)
+		{
+			return (boolean)inObj;
+		}
+		else{
+			return false;
+		}
 	}
+	/*fin*/
+	public static ReturnInfo refreshItemList()
+	{
+		Object inObj = NetTool.Receive(Command.REFRESH_ITEM_LIST, user.id);
+		if(inObj != null)
+		{
+			user.itemList = (ItemList)inObj;
+			return ReturnInfo.SUCCESS;
+		}
+		else{
+			return ReturnInfo.UNKNOWN_EXPECTION;
+		}
+	}
+	
+	
 }

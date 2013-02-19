@@ -37,14 +37,14 @@ public class ItemList
 		if(itemList.add(item))
 			return ReturnInfo.SUCCESS;
 		else 			
-			return ReturnInfo.FAIL;
+			return ReturnInfo.UNKNOWN_EXPECTION;
 	}
 	public ReturnInfo delete(Item item)
 	{
 		if(itemList.remove(item))
 			return ReturnInfo.SUCCESS;
 		else
-			return ReturnInfo.FAIL;
+			return ReturnInfo.UNKNOWN_EXPECTION;
 	}
 	public Item searchId(String id)
 	{
