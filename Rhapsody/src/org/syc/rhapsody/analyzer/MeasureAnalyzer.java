@@ -1,7 +1,6 @@
 package org.syc.rhapsody.analyzer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,7 +25,9 @@ public class MeasureAnalyzer {
 	}
 	
 	private static String[][] seedChords = {ChordDefinition.MajorTriad, ChordDefinition.MinorTriad,
-		ChordDefinition.AugmentedTriad,ChordDefinition.DiminishedTriad};
+		ChordDefinition.AugmentedTriad,ChordDefinition.DiminishedTriad, ChordDefinition.MajorMinorSeventh};
+	
+	private Tone start, end;
 	
 	public MeasureAnalyzer(ArrayList<Measure> measures, String tonicName, M mode) throws ParserException{
 		this.measures = measures;
@@ -49,14 +50,16 @@ public class MeasureAnalyzer {
 	
 	public void analyze() throws AnalyzerException, ParserException{
 		for(Measure m : measures)
-			chords.addAll(analyzeMeasure(m, 1));
+			chords.addAll(analyzeChord(m, 1));//get one chord for each measure
 		
 		//for(HashMap<Tone,Integer> beatChords : chords)
 			//ca.eliminateChord(beatChords);
 		
+		strictChord(2);//retain chords that include both stressed notes
+		
 		progressions = new ArrayList<ArrayList<Tone>>();
 		
-		Tone start = ka.getChord("I");
+		start = end = ka.getChord("I");
 		ArrayList<Tone> history = new ArrayList<Tone>();
 		history.add(start);
 		progress(history, 1, 0);
@@ -73,17 +76,21 @@ public class MeasureAnalyzer {
 	private void progress(ArrayList<Tone> history, int index, int rate){
 		if(index == chords.size()){
 			//printHistory(history, rate);
-			progressions.add(history);
+			if(history.get(index-1).equals(end))
+				progressions.add(history);
 			return;
 		}
 		Tone prev = history.get(index-1);
 		Set<Tone> posis = pg.next(prev).keySet();
 		Set<Tone> currents = chords.get(index).keySet();
 		currents.retainAll(posis);
-		if(currents.size()==0)
+		if(currents.size()==0){
 			System.out.println("Stuck here -> "+Integer.toString(index+1));
+			printHistory(history,rate);
+		}
 		for(Tone cur: currents){
 			int r = chords.get(index).get(cur);
+			@SuppressWarnings("unchecked")
 			ArrayList<Tone> nhist = (ArrayList<Tone>) history.clone();
 			nhist.add(cur);
 			progress(nhist,index+1, rate+r);
@@ -91,6 +98,7 @@ public class MeasureAnalyzer {
 	}
 	
 	
+
 	private void printHistory(ArrayList<Tone> history, int rate){
 		for(Tone h:history)
 			System.out.print(" "+h+" ");
@@ -108,8 +116,19 @@ public class MeasureAnalyzer {
 	}
 	
 	
+	private void strictChord(int threshold){
+		for(HashMap<Tone,Integer> mchords : chords){
+			Iterator<Entry<Tone,Integer>> iter = mchords.entrySet().iterator();
+			while(iter.hasNext()){
+				Entry<Tone,Integer> entry = iter.next();
+				if(entry.getValue()<threshold)
+					iter.remove();
+			}
+		}
+	}
+	
 	//find chords with pitches in the measure
-	public static ArrayList<HashMap<Tone,Integer>> analyzeMeasure(Measure measure, 
+	public static ArrayList<HashMap<Tone,Integer>> analyzeChord(Measure measure, 
 			int nbeats) throws AnalyzerException, ParserException{
 		if(measure.rhythm.beats%nbeats !=0 || nbeats > measure.rhythm.beats){
 			throw new AnalyzerException("Invalid nbeats!");
@@ -128,7 +147,9 @@ public class MeasureAnalyzer {
 					HashMap<Tone,Integer> sc = tone.getChords(seed);
 					mergeChord(chords,sc);
 				}
-			}			
+			}
+			if(chords.size()==0)
+				throw new AnalyzerException("Cannot find a chord for this measure");
 			chordCol.add(chords);
 		}		
 		return chordCol;

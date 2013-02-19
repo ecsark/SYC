@@ -37,7 +37,7 @@ public class ComposingTest {
 	public void test() {
 		try {
 			ArrayList<HashMap<Tone,Integer>> measureChords = 
-					MeasureAnalyzer.analyzeMeasure(be.sentence.measures.get(1), 1);
+					MeasureAnalyzer.analyzeChord(be.sentence.measures.get(1), 1);
 			for(HashMap<Tone,Integer> beatChords: measureChords){
 				Iterator<Entry<Tone,Integer>> iter = beatChords.entrySet().iterator(); 
 				while (iter.hasNext()) {
@@ -65,8 +65,12 @@ public class ComposingTest {
 					System.out.print(" "+h+" ");
 				System.out.println();
 			}
+			if(progressions.size()==0){
+				System.out.println("Chord failure!");
+				return;
+			}
 			
-			ArrayList<Tone> prog = progressions.get(32);//only test the 14th progression
+			ArrayList<Tone> prog = progressions.get(200);//only test the 14th progression
 			
 			ArrayList<Measure> chorus = new ArrayList<Measure>();
 			Measure r = new Measure();

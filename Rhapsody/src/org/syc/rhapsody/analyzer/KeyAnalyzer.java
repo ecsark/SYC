@@ -42,15 +42,16 @@ public class KeyAnalyzer {
 		if(chordPool.containsKey(chordName))
 			return chordPool.get(chordName);
 		Tone chord = new Tone();
-		if(!ChordDefinition.TriadMap.containsKey(chordName))
+		if(!ChordDefinition.ChordMap.containsKey(chordName))
 			throw new ParserException(chordName+" is not defined!");
-		Pair<String, String[]> chordMethod = ChordDefinition.TriadMap.get(chordName);
+		Pair<String, String[]> chordMethod = ChordDefinition.ChordMap.get(chordName);
 		Pitch root = tonic.getPitchByIntervalUp(chordMethod.a);
 		chord.addPitch(root);
 		for(String s : chordMethod.b){
 			root = root.getPitchByIntervalUp(s);
 			chord.addPitch(root);
 		}
+		chord.toNorm();//convert to norm
 		chordPool.put(chordName, chord);
 		return chord;
 	}

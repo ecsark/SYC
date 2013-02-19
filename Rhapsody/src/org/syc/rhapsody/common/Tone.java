@@ -3,6 +3,11 @@ package org.syc.rhapsody.common;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import org.syc.rhapsody.analyzer.AnalyzerException;
 
 public class Tone{
 	public ArrayList<Pitch> pits;
@@ -87,17 +92,30 @@ public class Tone{
 		return cmap;
 	}
 	
-	public HashMap<Tone,Integer> getChords(String[] strategy) throws ParserException{
-		if(pits.size()==0)
+	
+	public HashMap<Tone,Integer> getChords(String[] strategy) throws ParserException, AnalyzerException{
+		if(pits.size()==0)//rest
 			return new HashMap<Tone,Integer>();
-		if(pits.size()==1){
-			return getChords(strategy, pits.get(0));
-		}
-		else{
-			HashMap<Tone,Integer> chords = new HashMap<Tone,Integer>();
-			chords.put(this, 1);
+		
+		HashMap<Tone,Integer> chords = getChords(strategy,pits.get(0));
+		
+		if(pits.size()==1)//single note
 			return chords;
-		}		
+		
+		
+		Set<Tone> tones = chords.keySet();
+		for(int i=1; i<pits.size(); ++i){
+			HashMap<Tone,Integer> ch = getChords(strategy,pits.get(i));
+			Set<Tone> tn = ch.keySet();
+			Iterator<Tone> it = tones.iterator();
+			while(it.hasNext()){
+				Tone t = it.next();
+				if(!tn.contains(t))
+					it.remove();
+			}
+		}
+		
+		return chords;			
 	}
 	
 	public void toNorm(){

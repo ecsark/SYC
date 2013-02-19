@@ -12,7 +12,7 @@ public class BlueElf {
 		rhythm = new Rhythm(4,2);
 		try {
 			m1_5();
-			//m6_16();//not work on 8th measure
+			m6_16();//not work on 8th measure
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
@@ -55,7 +55,8 @@ public class BlueElf {
 		m13.sods.set(0, SodFactory.newNote("5D",4,M.DOTTED));
 		
 		addNote(new String[]{"4F","4E","4F","5D"}, new int[]{8,8,8,8});
-		addNote(new String[]{"5C","4B","4A","4B"}, new int[]{8,8,8,8});
+		//addNote(new String[]{"5C","4B","4A","4B"}, new int[]{8,8,8,8});
+		addNote(new String[]{"5C","4B","5C","4B"}, new int[]{8,8,8,8});
 		addNote(new String[]{"5C"}, new int[]{2});
 	}
 }
