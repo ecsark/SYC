@@ -24,7 +24,7 @@ public class PriceDialog extends Dialog {
 	
 	public PriceDialog(Context context) {
 		super(context,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-		setContentView(R.layout.pricing);
+		setContentView(R.layout.dialog_price);
 		Window window= getWindow();
 		window.setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		window.setGravity(Gravity.CENTER);

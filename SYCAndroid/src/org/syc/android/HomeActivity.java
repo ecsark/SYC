@@ -39,8 +39,8 @@ public class HomeActivity extends Activity {
 		pd.setItem("Track212", 210, 120,0xffffff);
 		pd.show();*/
 		
+		//startActivity(new Intent(this,CommenceActivity.class));
 		startActivity(new Intent(this,ShopActivity.class));
-
 	}
 
 	

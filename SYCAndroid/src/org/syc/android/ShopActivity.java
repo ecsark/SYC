@@ -1,9 +1,13 @@
 package org.syc.android;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -13,15 +17,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ShopActivity extends Activity {
 
 	private LinearLayout hsvLayout;
+	private ArrayList<Integer> colors;
+	private int coloridx;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shop);
+		
+		initColors();
+		coloridx = 0;
 		
 		hsvLayout = (LinearLayout) findViewById(R.id.hsv_layout);
 		for(int i=0; i<8; ++i){
@@ -38,12 +48,30 @@ public class ShopActivity extends Activity {
 			
 			
 			
-			column.addView(newItemBlock("Track"+Integer.toString(i),20,Color.GRAY));
+			column.addView(newItemBlock("Track"+Integer.toString(i),20,getNextColor()));
 			column.addView(padding);
-			column.addView(newItemBlock("Track"+Integer.toString(i),30,Color.RED));
+			column.addView(newItemBlock("Track"+Integer.toString(i),30,getNextColor()));
 			hsvLayout.addView(column);
 			
 		}
+		
+	}
+	
+	private int getNextColor(){
+		int color = colors.get(coloridx);
+		coloridx = (coloridx+1)%colors.size();
+		return color;
+	}
+	
+	private void initColors(){
+		colors = new ArrayList<Integer>();
+		colors.add(getResources().getColor(R.color.dark_green));
+		colors.add(getResources().getColor(R.color.dark_blue));
+		colors.add(getResources().getColor(R.color.purple));
+		colors.add(getResources().getColor(R.color.light_green));
+		colors.add(getResources().getColor(R.color.light_blue));
+		colors.add(getResources().getColor(R.color.grey));
+		colors.add(getResources().getColor(R.color.red));
 		
 	}
 
@@ -55,7 +83,7 @@ public class ShopActivity extends Activity {
 		TextView itemPrice = (TextView)item.findViewById(R.id.itemPrice);
 		itemPrice.setText("$"+Integer.toString(price));
 		GradientDrawable background = (GradientDrawable) item.getBackground();
-		background.setColor(0xaf000000+ color);
+		background.setColor(0xcf000000+ color);
 		
 		item.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -68,15 +96,32 @@ public class ShopActivity extends Activity {
 	}
 	
 	public void onItemClick(View view){
-		PriceDialog pd = new PriceDialog(this);
+		//PriceDialog pd = new PriceDialog(this);
 		String name = ((TextView) view.findViewById(R.id.itemName)).getText().toString();
 		String priceLabel = ((TextView) view.findViewById(R.id.itemPrice)).getText().toString();
 		priceLabel = priceLabel.substring(1, priceLabel.length());
 		GradientDrawable background = (GradientDrawable) view.getBackground();
 		//int bgColor = background
-		int price = Integer.parseInt(priceLabel);
+		int price = Integer.parseInt(priceLabel);		
 		
-		pd.setItem(name, price, price, 0xaf000000+Color.RED);
-		pd.show();
+		Intent i = new Intent();
+		i.setClass(this, PlayActivity.class);
+		i.putExtra("itemName", name);
+		i.putExtra("itemPrice", price);
+		startActivityForResult(i, 123);
+	
+		
+		//pd.setItem(name, price, price, 0xaf000000+Color.RED);
+		//pd.show();
 	}
+	
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		int rtval = data.getExtras().getInt("labelPrice", 123);
+        Toast.makeText(this, Integer.toString(rtval), Toast.LENGTH_SHORT).show();
+       
+    }
 }

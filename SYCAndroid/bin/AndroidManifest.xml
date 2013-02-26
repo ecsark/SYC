@@ -40,10 +40,18 @@
         </activity>
         <activity
             android:name="org.syc.android.ShopActivity"
-            android:label="@string/title_activity_shop" 
+            android:label="@string/title_activity_shop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
+        <activity
+            android:name="org.syc.android.CommenceActivity"
+            android:label="@string/title_activity_commence"
+            
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"  >
+        </activity>
+         <service android:enabled="true" android:name="org.syc.android.MusicService" />
     </application>
 
 </manifest>

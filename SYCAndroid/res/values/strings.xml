@@ -8,9 +8,18 @@
 
     <color name="btntextcolor">#FFFFFF</color>
     <color name="black">#000000</color>
+    
+    <color name="dark_green">#385723</color>
+    <color name="dark_blue">#2F5597</color>
+    <color name="purple">#7930A0</color>
+    <color name="light_green">#00CC00</color>
+    <color name="light_blue">#00B0F0</color>
+    <color name="grey">#007F7F7F</color>
+    <color name="red">#00ff0000</color>
 
     <string name="title_activity_play">PlayActivity</string>
     <string name="title_activity_local">LocalActivity</string>
     <string name="title_activity_shop">ShopActivity</string>
+    <string name="title_activity_commence">CommenceActivity</string>
 
 </resources>
