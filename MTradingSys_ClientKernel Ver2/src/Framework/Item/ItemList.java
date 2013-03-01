@@ -3,12 +3,14 @@
 //////////////////////////////////////////////////////
 package Framework.Item;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 import Framework.Const.ReturnInfo;
 
-public class ItemList 
+public class ItemList implements Serializable 
 {
+	private static final long serialVersionUID = 1L;
 	protected Vector<Item> itemList;
 	
 	public ItemList(ItemList iL)
@@ -46,7 +48,7 @@ public class ItemList
 		else
 			return ReturnInfo.UNKNOWN_EXPECTION;
 	}
-	public Item searchId(String id)
+	public Item searchId(long id)
 	{
 		Item i = new Item(id, null, false);
 		int findIndex = itemList.indexOf(i);
