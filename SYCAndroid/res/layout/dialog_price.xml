@@ -32,31 +32,6 @@
         android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
         android:background="@drawable/minus" />
-
-
-
-    <TextView
-        android:id="@+id/originalPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/TextView1"
-        android:layout_marginLeft="84dp"
-        android:text="$120"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/TextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/PricingOK"
-        android:layout_marginLeft="67dp"
-        android:text="Purchase Price"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
     
     <Button
         android:id="@+id/button_OK"
@@ -73,5 +48,28 @@
         android:textColor="@color/btntextcolor"
         android:textSize="20sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/originalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView1"
+        android:layout_below="@+id/TextView1"
+        android:layout_marginLeft="22dp"
+        android:text="$120"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/button_OK"
+        android:layout_marginLeft="32dp"
+        android:text="Purchase Price"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
 </RelativeLayout>

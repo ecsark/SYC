@@ -17,8 +17,9 @@ public class CommenceActivity extends Activity {
 		screen.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
-				startActivity(new Intent(CommenceActivity.this,LoginActivity.class));
-				//startActivity(new Intent(CommenceActivity.this,LocalActivity.class));
+				//startActivity(new Intent(CommenceActivity.this,LoginActivity.class));
+				startActivity(new Intent(CommenceActivity.this,LocalActivity.class));
+				//startActivity(new Intent(CommenceActivity.this,PlayScrollActivity.class));
 
 				overridePendingTransition(R.anim.slide2,R.anim.slide1);	
 				CommenceActivity.this.finish();				
@@ -26,12 +27,5 @@ public class CommenceActivity extends Activity {
 		});
 	}
 	
-
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.commence, menu);
-		return true;
-	}*/
 
 }

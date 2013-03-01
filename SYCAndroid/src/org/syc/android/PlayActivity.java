@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PlayActivity extends Activity {
@@ -55,7 +57,10 @@ public class PlayActivity extends Activity {
 			onBackPressed();
 		}
 
-		seekBar = (SeekBar) findViewById(R.id.seekBar);
+		TextView nameText = (TextView) findViewById(R.id.itemName);
+		nameText.setText(itemName);
+		LinearLayout seekBarLayout = (LinearLayout) findViewById(R.id.seekBarLayout); 
+		seekBar = (SeekBar) seekBarLayout.findViewById(R.id.seekBar);
 		seekBar.setMax(player.getDuration());
 		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -89,17 +94,6 @@ public class PlayActivity extends Activity {
 			}
 		});
 		
-		Button btn_home = (Button) findViewById(R.id.btn_home);
-		btn_home.setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent();
-				intent.putExtra("labelPrice", labelPrice);
-				intent.putExtra("position", pos);
-				setResult(10, intent);
-				PlayActivity.this.finish();
-			}
-		});
 	}
 
 	void showPricingDialog() {
@@ -137,7 +131,12 @@ public class PlayActivity extends Activity {
 	}
 
 	@Override
-	public void onBackPressed() {		
+	public void onBackPressed() {
+		Intent intent = new Intent();
+		intent.putExtra("labelPrice", labelPrice);
+		intent.putExtra("position", pos);
+		setResult(10, intent);
+		PlayActivity.this.finish();
 	}
 
 	Runnable start = new Runnable() {

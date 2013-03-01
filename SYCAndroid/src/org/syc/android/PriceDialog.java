@@ -32,11 +32,7 @@ public class PriceDialog extends Dialog {
 		itemSellingPrice =  (TextView) layout.findViewById(R.id.itemPrice);
 		itemBackground = (GradientDrawable) layout.getBackground();
 		itemPurchasePrice = (TextView) findViewById(R.id.originalPrice);
-		
-		/*String priceString = itemSellingPrice.getText().toString();
-		price = Integer.parseInt(priceString.substring(1, priceString.length()));*/
-		
-		
+				
 		done_btn = (Button) findViewById(R.id.button_OK);
 		Button minus = (Button) findViewById(R.id.minus);
 		Button plus = (Button) findViewById(R.id.plus);

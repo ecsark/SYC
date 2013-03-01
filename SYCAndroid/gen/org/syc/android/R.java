@@ -67,40 +67,44 @@ public final class R {
         public static final int redbuttonup=0x7f020018;
     }
     public static final class id {
-        public static final int DialogMessageContent=0x7f0a000d;
-        public static final int DialogMessageTitle=0x7f0a000c;
-        public static final int DialogOKButton=0x7f0a000e;
-        public static final int PricingOK=0x7f0a0019;
-        public static final int RelativeLayout1=0x7f0a000f;
-        public static final int TextView1=0x7f0a0018;
-        public static final int action_settings=0x7f0a0021;
-        public static final int btn_billboard=0x7f0a0008;
-        public static final int btn_home=0x7f0a0007;
-        public static final int button_OK=0x7f0a001a;
-        public static final int editText1=0x7f0a0011;
-        public static final int editText2=0x7f0a0010;
+        public static final int DialogMessageContent=0x7f0a0014;
+        public static final int DialogMessageTitle=0x7f0a0013;
+        public static final int DialogOKButton=0x7f0a0015;
+        public static final int TextView1=0x7f0a001c;
+        public static final int action_settings=0x7f0a0025;
+        public static final int btn_billboard=0x7f0a000e;
+        public static final int button_OK=0x7f0a001b;
+        public static final int button_cancel=0x7f0a001d;
+        public static final int button_deal=0x7f0a001e;
         public static final int gallery=0x7f0a0001;
-        public static final int gallery_item_image=0x7f0a001b;
-        public static final int gallery_item_title=0x7f0a001c;
-        public static final int goLabel=0x7f0a001d;
-        public static final int hsv_layout=0x7f0a0009;
-        public static final int itemColor=0x7f0a001e;
-        public static final int itemName=0x7f0a000a;
-        public static final int itemPrice=0x7f0a000b;
-        public static final int itemPurchasePrice=0x7f0a001f;
-        public static final int itemSellingPrice=0x7f0a0020;
-        public static final int list_scroll_view=0x7f0a0002;
-        public static final int minus=0x7f0a0015;
-        public static final int originalPrice=0x7f0a0017;
-        public static final int password=0x7f0a0004;
-        public static final int plus=0x7f0a0016;
-        public static final int priceDialog=0x7f0a0013;
-        public static final int pricingItem=0x7f0a0014;
+        public static final int gallery_item_image=0x7f0a001f;
+        public static final int gallery_item_title=0x7f0a0020;
+        public static final int goLabel=0x7f0a0021;
+        public static final int hsv_layout=0x7f0a0011;
+        public static final int indicator=0x7f0a0010;
+        public static final int itemColor=0x7f0a0022;
+        public static final int itemName=0x7f0a000d;
+        public static final int itemPrice=0x7f0a0012;
+        public static final int itemPurchasePrice=0x7f0a0023;
+        public static final int itemSellingPrice=0x7f0a0024;
+        public static final int list_scroll_view=0x7f0a0003;
+        public static final int minus=0x7f0a0018;
+        public static final int originalPrice=0x7f0a001a;
+        public static final int password=0x7f0a0009;
+        public static final int plus=0x7f0a0019;
+        public static final int priceDialog=0x7f0a0016;
+        public static final int pricingItem=0x7f0a0017;
+        public static final int property=0x7f0a0005;
+        public static final int property_layout=0x7f0a0004;
+        public static final int rank=0x7f0a0007;
+        public static final int rank_layout=0x7f0a0006;
         public static final int screen=0x7f0a0000;
-        public static final int seekBar=0x7f0a0006;
-        public static final int submit=0x7f0a0003;
-        public static final int textView1=0x7f0a0012;
-        public static final int username=0x7f0a0005;
+        public static final int scrollView1=0x7f0a0002;
+        public static final int seekBar=0x7f0a000c;
+        public static final int seekBarLayout=0x7f0a000b;
+        public static final int submit=0x7f0a0008;
+        public static final int username=0x7f0a000a;
+        public static final int viewpagerLayout=0x7f0a000f;
     }
     public static final class layout {
         public static final int activity_commence=0x7f030000;
@@ -108,21 +112,23 @@ public final class R {
         public static final int activity_local=0x7f030002;
         public static final int activity_login=0x7f030003;
         public static final int activity_play=0x7f030004;
-        public static final int activity_shop=0x7f030005;
-        public static final int block_button=0x7f030006;
-        public static final int dialog=0x7f030007;
-        public static final int dialog_login=0x7f030008;
+        public static final int activity_play_scroll=0x7f030005;
+        public static final int activity_shop=0x7f030006;
+        public static final int block_button=0x7f030007;
+        public static final int dialog=0x7f030008;
         public static final int dialog_price=0x7f030009;
-        public static final int gallery_item=0x7f03000a;
-        public static final int go_out=0x7f03000b;
-        public static final int local_item=0x7f03000c;
+        public static final int dialog_purchase=0x7f03000a;
+        public static final int gallery_item=0x7f03000b;
+        public static final int go_out=0x7f03000c;
+        public static final int local_item=0x7f03000d;
     }
     public static final class menu {
         public static final int commence=0x7f090000;
         public static final int home=0x7f090001;
         public static final int local=0x7f090002;
         public static final int play=0x7f090003;
-        public static final int shop=0x7f090004;
+        public static final int play_scroll=0x7f090004;
+        public static final int shop=0x7f090005;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
@@ -133,6 +139,7 @@ public final class R {
         public static final int title_activity_home=0x7f060008;
         public static final int title_activity_local=0x7f060005;
         public static final int title_activity_play=0x7f060004;
+        public static final int title_activity_play_scroll=0x7f060009;
         public static final int title_activity_shop=0x7f060006;
     }
     public static final class style {
