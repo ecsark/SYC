@@ -10,9 +10,10 @@ import Framework.Const.ReturnInfo;
 
 public class Money implements Serializable
 {
+	private long value;
 	public Money(Money m)
 	{
-		
+		value = m.value;
 	}
 	
 	public void set(Money m)
