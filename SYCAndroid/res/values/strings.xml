@@ -21,5 +21,7 @@
     <string name="title_activity_local">LocalActivity</string>
     <string name="title_activity_shop">ShopActivity</string>
     <string name="title_activity_commence">CommenceActivity</string>
+    <color name="game_bg">#BE5108</color>
+    <string name="title_activity_home">HomeActivity</string>
 
 </resources>

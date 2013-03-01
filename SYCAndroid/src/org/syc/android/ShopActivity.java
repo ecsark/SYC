@@ -3,6 +3,7 @@ package org.syc.android;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,7 +35,7 @@ public class ShopActivity extends Activity {
 		coloridx = 0;
 		
 		hsvLayout = (LinearLayout) findViewById(R.id.hsv_layout);
-		for(int i=0; i<8; ++i){
+		for(int i=0; i<18; ++i){
 			LinearLayout column = new LinearLayout(this);
 			column.setOrientation(LinearLayout.VERTICAL);
 			column.setPadding(10, 10, 10, 10);
@@ -109,19 +110,27 @@ public class ShopActivity extends Activity {
 		i.putExtra("itemName", name);
 		i.putExtra("itemPrice", price);
 		startActivityForResult(i, 123);
-	
+		overridePendingTransition(R.anim.zoom_enter,R.anim.zoom_exit);	
 		
 		//pd.setItem(name, price, price, 0xaf000000+Color.RED);
 		//pd.show();
 	}
 	
 	
+
+	
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		int rtval = data.getExtras().getInt("labelPrice", 123);
-        Toast.makeText(this, Integer.toString(rtval), Toast.LENGTH_SHORT).show();
-       
-    }
+	public void onBackPressed() {
+		MessageDialog exitDialog = new MessageDialog(this){
+			public void onOKPressed(){
+				Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    vibrator.vibrate(200);  
+				finish();
+	            System.exit(0);
+			}
+		};
+		exitDialog.setTitle("Exit?");
+		exitDialog.show();
+	}
+
 }

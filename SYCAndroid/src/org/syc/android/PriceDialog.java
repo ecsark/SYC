@@ -4,14 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +17,8 @@ public class PriceDialog extends Dialog {
 
 	private TextView itemName, itemSellingPrice, itemPurchasePrice;
 	private GradientDrawable itemBackground;
-	private int price;
+	private long price;
+	Button done_btn;
 	
 	public PriceDialog(Context context) {
 		super(context,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
@@ -35,18 +33,21 @@ public class PriceDialog extends Dialog {
 		itemBackground = (GradientDrawable) layout.getBackground();
 		itemPurchasePrice = (TextView) findViewById(R.id.originalPrice);
 		
-		String priceString = itemSellingPrice.getText().toString();
-		price = Integer.parseInt(priceString.substring(1, priceString.length()));
+		/*String priceString = itemSellingPrice.getText().toString();
+		price = Integer.parseInt(priceString.substring(1, priceString.length()));*/
 		
+		
+		done_btn = (Button) findViewById(R.id.button_OK);
 		Button minus = (Button) findViewById(R.id.minus);
 		Button plus = (Button) findViewById(R.id.plus);
+		
 		
 		minus.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
 				if(price>=10){
 					price -= 5;
-					itemSellingPrice.setText("$"+Integer.toString(price));	
+					itemSellingPrice.setText("$"+Long.toString(price));	
 				}
 				else
 					Toast.makeText(getContext(), "Price cannot be lower than 5!",
@@ -58,13 +59,13 @@ public class PriceDialog extends Dialog {
 			@Override
 			public void onClick(View arg0) {
 				price += 5;
-				itemSellingPrice.setText("$"+Integer.toString(price));	
+				itemSellingPrice.setText("$"+Long.toString(price));	
 			}
 		});
 	}
 	
 
-	public void setItem(String name, int sellingPrice, int purchasePrice, int bgColor){
+	public void setItem(String name, long sellingPrice, long purchasePrice, int bgColor){
 		if(name.length()<8)
 			itemName.setText(name);
 		else{
@@ -72,16 +73,20 @@ public class PriceDialog extends Dialog {
 			itemName.setText(cname);
 		}
 		price = sellingPrice;
-		itemSellingPrice.setText("$"+Integer.toString(sellingPrice));
-		itemPurchasePrice.setText("$"+purchasePrice);
+		itemSellingPrice.setText("$"+Long.toString(sellingPrice));
+		itemPurchasePrice.setText("$"+Long.toString(purchasePrice));
 		itemBackground.setColor(0xff000000 + bgColor);
 		itemBackground.invalidateSelf();
+	}
+	
+	public long getLabelPrice(){
+		return price;
 	}
 	
 	
 	@Override
 	public void onBackPressed() {
-		dismiss();
+		
 	}
 
 }

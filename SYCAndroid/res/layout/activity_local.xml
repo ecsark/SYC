@@ -17,13 +17,18 @@
         android:layout_alignParentLeft="true"
         android:gravity="center_vertical"
         android:spacing="15dip" />
-
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+	
+    <ScrollView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
-    </ListView>
-
-</RelativeLayout>
+    	<LinearLayout 
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:orientation="vertical"
+    	    android:id="@+id/list_scroll_view">  
+    	</LinearLayout>    
+    </ScrollView>
+    
+    </RelativeLayout>

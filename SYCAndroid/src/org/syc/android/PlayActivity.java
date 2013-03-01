@@ -1,104 +1,159 @@
 package org.syc.android;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Vibrator;
+import android.os.Environment;
+import android.os.Handler;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 public class PlayActivity extends Activity {
 
-	private Button btn_pause;
-	private TextView time;
-	private Context context;
+	Button btn_billboard;
+	SeekBar seekBar;
+
+	String filepath = Environment.getExternalStorageDirectory()
+			.getPath() + "/" + "Bach.mid";
 	
-	private String itemName;
-	private int itemPrice, labelPrice;
+	String itemName;
+	long itemPrice, labelPrice;
+	int color, pos;
 
-	private boolean isPlaying;
+	MediaPlayer player;
 
-	private boolean mIsBound = false;
-	private MusicService mService;
-	private ServiceConnection svConn = new ServiceConnection() {
-
-		public void onServiceConnected(ComponentName name, IBinder binder) {
-			mService = ((MusicService.MusicBinder) binder).getService();
-		}
-
-		public void onServiceDisconnected(ComponentName name) {
-			mService = null;
-		}
-	};
-
-	void doBindService() {
-		bindService(new Intent(this, MusicService.class), svConn,
-				Context.BIND_AUTO_CREATE);
-		mIsBound = true;
-	}
-
-	void doUnbindService() {
-		if (mIsBound) {
-			unbindService(svConn);
-			mIsBound = false;
-		}
-	}
+	Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		isPlaying = true;
-		context = PlayActivity.this;
+		Bundle data  = getIntent().getExtras();
 		
-		Intent i = getIntent();
-		itemName = i.getStringExtra("itemName");
-		itemPrice = i.getIntExtra("itemPrice", 5);
+		itemName = data.getString("itemName");
+		itemPrice = data.getLong("itemPrice");
+		labelPrice = data.getLong("labelPrice");
+		color = data.getInt("color", Color.RED);
+		pos = data.getInt("position");
 		
-		doBindService();
 
-		btn_pause = (Button) findViewById(R.id.button_pause);
-		btn_pause.setOnClickListener(new View.OnClickListener() {
+		player = new MediaPlayer();
+		try {
+			player.setDataSource(filepath);
+			player.prepare();
+			player.setLooping(false);
+			handler.post(start);
+		} catch (Exception e) {
+			Toast.makeText(this, "Music Service Failed to start",
+					Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+			onBackPressed();
+		}
+
+		seekBar = (SeekBar) findViewById(R.id.seekBar);
+		seekBar.setMax(player.getDuration());
+		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onStopTrackingTouch(SeekBar arg0) {
+				player.seekTo(seekBar.getProgress());
+				player.start();
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar arg0) {
+				player.pause();
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+
+			}
+		});
+
+		btn_billboard = (Button) findViewById(R.id.btn_billboard);
+		btn_billboard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isPlaying) {
-					mService.pauseMusic();
-					isPlaying = false;
+				if (player.isPlaying()) {
+					player.pause();
 					showPricingDialog();
 				} else {
-					mService.playMusic();
-					isPlaying = true;
+					player.start();
 				}
 			}
 		});
+		
+		Button btn_home = (Button) findViewById(R.id.btn_home);
+		btn_home.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent();
+				intent.putExtra("labelPrice", labelPrice);
+				intent.putExtra("position", pos);
+				setResult(10, intent);
+				PlayActivity.this.finish();
+			}
+		});
 	}
-	
-	private void showPricingDialog(){
-		PriceDialog pd = new PriceDialog(this);
-		pd.setItem(itemName, itemPrice, itemPrice, 0xaf000000+Color.RED);
+
+	void showPricingDialog() {
+		final PriceDialog pd = new PriceDialog(this);
+		pd.setItem(itemName, labelPrice, itemPrice, 0xaf000000 + color);
+		pd.done_btn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				labelPrice = pd.getLabelPrice();
+				player.start();
+				pd.dismiss();
+			}
+		});
 		pd.show();
 	}
-	
+
 	@Override
-	public void onBackPressed() {
-
-		doUnbindService();
-		Intent i =new Intent();
-        i.putExtra("labelPrice", itemPrice);
-        setResult(10, i);
-		this.finish();
+	public void onDestroy() {
+		super.onDestroy();
+		handler.removeCallbacks(start);
+		handler.removeCallbacks(updatesb);
+		player.release();
 	}
-	
-	
 
+	@Override
+	public void onStop() {
+		super.onStop();
+		player.stop();
+	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		player.pause();
+	}
+
+	@Override
+	public void onBackPressed() {		
+	}
+
+	Runnable start = new Runnable() {
+		@Override
+		public void run() {
+			player.start();
+			handler.post(updatesb);
+		}
+	};
+	
+	Runnable updatesb = new Runnable() {
+		@Override
+		public void run() {
+			seekBar.setProgress(player.getCurrentPosition());
+			handler.postDelayed(updatesb, 100);
+		}
+	};
 
 }

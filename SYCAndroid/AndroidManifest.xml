@@ -17,14 +17,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="org.syc.android.HomeActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_home"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="org.syc.android.PlayActivity"
@@ -45,13 +40,27 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="org.syc.android.CommenceActivity"
+            android:name="org.syc.android.LoginActivity"
             android:label="@string/title_activity_commence"
-            
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"  >
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
-         <service android:enabled="true" android:name="org.syc.android.MusicService" />
+
+        <service
+            android:name="org.syc.android.MusicService"
+            android:enabled="true" />
+
+        <activity
+            android:name="org.syc.android.CommenceActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
