@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ public class PlayScrollActivity extends Activity {
 
 		viewList = new ArrayList<View>();
 		indicator = (TextView) findViewById(R.id.indicator);
+		LinearLayout seekBarLayout = (LinearLayout) findViewById(R.id.seekBarLayout);
+		seekBar = (SeekBar) seekBarLayout.findViewById(R.id.seekBar);
 		pager = (ViewPager) findViewById(R.id.viewpagerLayout);
 		pager.setAdapter(new MPagerAdapter());
 		player = new MediaPlayer();
@@ -88,7 +91,7 @@ public class PlayScrollActivity extends Activity {
 					R.id.itemName);
 			nameText.setText(itemName);
 
-			seekBar = (SeekBar) viewList.get(index).findViewById(R.id.seekBar);
+			seekBar.setProgress(0);
 			seekBar.setMax(player.getDuration());
 			seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 				@Override

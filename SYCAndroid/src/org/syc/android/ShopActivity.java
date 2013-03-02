@@ -106,7 +106,7 @@ public class ShopActivity extends Activity {
 		int price = Integer.parseInt(priceLabel);		
 		
 		Intent i = new Intent();
-		i.setClass(this, PlayActivity.class);
+		i.setClass(this, PlayScrollActivity.class);
 		i.putExtra("itemName", name);
 		i.putExtra("itemPrice", price);
 		startActivityForResult(i, 123);

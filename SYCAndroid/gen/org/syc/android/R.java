@@ -72,7 +72,7 @@ public final class R {
         public static final int DialogOKButton=0x7f0a0015;
         public static final int TextView1=0x7f0a001c;
         public static final int action_settings=0x7f0a0025;
-        public static final int btn_billboard=0x7f0a000e;
+        public static final int btn_billboard=0x7f0a000c;
         public static final int button_OK=0x7f0a001b;
         public static final int button_cancel=0x7f0a001d;
         public static final int button_deal=0x7f0a001e;
@@ -83,7 +83,7 @@ public final class R {
         public static final int hsv_layout=0x7f0a0011;
         public static final int indicator=0x7f0a0010;
         public static final int itemColor=0x7f0a0022;
-        public static final int itemName=0x7f0a000d;
+        public static final int itemName=0x7f0a000b;
         public static final int itemPrice=0x7f0a0012;
         public static final int itemPurchasePrice=0x7f0a0023;
         public static final int itemSellingPrice=0x7f0a0024;
@@ -100,11 +100,11 @@ public final class R {
         public static final int rank_layout=0x7f0a0006;
         public static final int screen=0x7f0a0000;
         public static final int scrollView1=0x7f0a0002;
-        public static final int seekBar=0x7f0a000c;
-        public static final int seekBarLayout=0x7f0a000b;
+        public static final int seekBar=0x7f0a000f;
+        public static final int seekBarLayout=0x7f0a000e;
         public static final int submit=0x7f0a0008;
         public static final int username=0x7f0a000a;
-        public static final int viewpagerLayout=0x7f0a000f;
+        public static final int viewpagerLayout=0x7f0a000d;
     }
     public static final class layout {
         public static final int activity_commence=0x7f030000;
