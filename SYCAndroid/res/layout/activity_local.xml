@@ -8,41 +8,27 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LocalActivity" >
-
-	
-	<HorizontalScrollView
-	    android:id="@+id/hsvView1"
+    
+    <LinearLayout
+        android:id="@+id/scrollindicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" >
-        
-        <LinearLayout
-            android:id="@+id/list_horizontal_scroll_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal" >
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+    </LinearLayout>
     
-    <ScrollView
-        android:id="@+id/scrollView1"
+     <android.support.v4.view.ViewPager
+        android:id="@+id/item_list"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+        android:layout_above="@id/scrollindicator"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/hsvView1"
-        android:layout_marginBottom="10dp" >
-
-        <LinearLayout
-            android:id="@+id/list_scroll_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            
-        </LinearLayout>
-    </ScrollView>
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="30dp"/>
 
     <LinearLayout
         android:id="@+id/property_layout"
@@ -96,5 +82,7 @@
             android:textSize="26sp"
             android:textStyle="bold|italic" />
     </LinearLayout>
+
+    
 
 </RelativeLayout>

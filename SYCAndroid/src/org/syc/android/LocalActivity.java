@@ -8,9 +8,13 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +24,7 @@ public class LocalActivity extends Activity {
 	
 	private LayoutInflater inflater;
 	private LinearLayout variationScroll;
-	private LinearLayout melodyScroll;
+	private LinearLayout scrollIndicator;
 	
 	private ArrayList<ListItem> variations;
 	private ArrayList<String> melodiNames;
@@ -30,6 +34,9 @@ public class LocalActivity extends Activity {
 	
 	private MediaPlayer player;
 	private boolean playWhenScroll = true;
+	
+	private ViewPager pager;
+	private ArrayList<View> viewList;
 
 	private String melodyDirectory = Environment.getExternalStorageDirectory().getPath() + "/SYC/testmu/melodies/";
 	
@@ -42,6 +49,39 @@ public class LocalActivity extends Activity {
 
 		inflater = LayoutInflater.from(this);
 		
+		
+		
+		pager = (ViewPager) findViewById(R.id.item_list);
+		pager.setAdapter(new MPagerAdapter());
+		viewList = new ArrayList<View>();
+		for (int i = 0; i < 5; ++i) {
+			View view = inflater.inflate(R.layout.local_scroll, null);
+			viewList.add(view);
+		}
+		pager.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int index) {
+				variationScroll = (LinearLayout) viewList.get(index).findViewById(R.id.list_scroll_view);
+				//TODO obtain variation list
+				updateVariationsView(getVariationList());
+				onScrollChanged(index);
+				if(playWhenScroll)
+					playMusic(index);
+			}
+			@Override
+			public void onPageScrolled(int index, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+		
+		
+		scrollIndicator = (LinearLayout) findViewById(R.id.scrollindicator);
+		genIndicator();
+		//;//start with 0
+		
 		player = new MediaPlayer();
 		
 		variations = new ArrayList<LocalActivity.ListItem>();
@@ -49,9 +89,7 @@ public class LocalActivity extends Activity {
 		fileNames = new ArrayList<String>();
 		
 		genMelodyList();
-		melodyScroll = (LinearLayout)findViewById(R.id.list_horizontal_scroll_view);
 		variationScroll = (LinearLayout) findViewById(R.id.list_scroll_view);
-		genMelodyScrollView();
 		
 		property = (TextView) findViewById(R.id.property);
 		rank = (TextView) findViewById(R.id.rank);
@@ -59,7 +97,34 @@ public class LocalActivity extends Activity {
 		updateProperty(3740);
 		updateRank(371);
 	}
+	
+	private void genIndicator(){
+		for(int i=0; i<viewList.size(); ++i){
+			LinearLayout indicator = (LinearLayout) inflater.inflate(R.layout.indicator, null);
+			//indicator.setLayoutParams(param);
+			//indicator.setBackgroundResource(R.drawable.note2);
+			final int index = i;
+			indicator.setOnClickListener(new View.OnClickListener() {				
+				@Override
+				public void onClick(View view) {
 
+					pager.setCurrentItem(index);
+				}
+			});
+			scrollIndicator.addView(indicator);
+		}
+	}
+
+	private void onScrollChanged(int index){
+		if(prevItemView!=null)
+			prevItemView.setBackgroundResource(R.drawable.note2);
+		
+		View newButton = scrollIndicator.getChildAt(index).findViewById(R.id.btn_indicator);
+		newButton.setBackgroundResource(R.drawable.note1);
+		prevItemView = newButton;
+	}
+	
+	
 	
 	private void updateProperty(long value){
 		property.setText(Long.toString(value));
@@ -77,8 +142,8 @@ public class LocalActivity extends Activity {
 		}
 	}
 	
-	private void genList() {
-		variations.clear();
+	private ArrayList<ListItem> getVariationList() {
+		ArrayList<ListItem> variations = new ArrayList<LocalActivity.ListItem>();
 		variations.add(new ListItem(1L, "item1", getResources().getColor(
 				R.color.dark_blue), 50L, 50L));
 		variations.add(new ListItem(2L, "item2", getResources().getColor(
@@ -97,48 +162,10 @@ public class LocalActivity extends Activity {
 				R.color.dark_green), 65L, 70L));
 		variations.add(new ListItem(3L, "item9", getResources().getColor(
 				R.color.red), 50L, 50L));
+		return variations;
 	}
 	
-	
-	private void genMelodyScrollView() {
-		for (int i = 0; i < melodiNames.size(); i++) {
-			final String iName = melodiNames.get(i);
-			
-			LayoutInflater inflater = LayoutInflater.from(this);
-			LinearLayout hsvItem = (LinearLayout) inflater.inflate(R.layout.gallery_item, null);			
-			
-			TextView name = (TextView)hsvItem.findViewById(R.id.gallery_item_title);
-			name.setText(iName);
-			
-			ImageView image = (ImageView)hsvItem.findViewById(R.id.gallery_item_image);
-			image.setBackgroundResource(R.drawable.piano_unselected);
-
-			hsvItem.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					setImage(prevItemView, R.drawable.piano_unselected);
-					setImage(view, R.drawable.piano);
-					prevItemView = view;
-					genList();
-					genScrollView();
-					if(playWhenScroll){
-						int index = ((ViewGroup)view.getParent()).indexOfChild(view);
-						playMusic(index);
-					}
-				}
-			});
-
-			melodyScroll.addView(hsvItem);
-		}
-	}	
-	
-	private void setImage(View view, int res){
-		if(view == null)
-			return;
-		ImageView image = (ImageView)view.findViewById(R.id.gallery_item_image);
-		image.setBackgroundResource(res);
-	}
-	
+		
 	private void playMusic(int index){
 			player.reset();
 			try {
@@ -154,11 +181,9 @@ public class LocalActivity extends Activity {
 	}
 
 	
-	private void genScrollView() {
+	private void updateVariationsView(ArrayList<ListItem> variations) {
 		variationScroll.removeAllViews();
-
 		variationScroll.addView(getShopItemView());
-
 		for (int i = 0; i < variations.size(); i++)
 			variationScroll.addView(getVariationItemView(variations.get(i),i));
 
@@ -241,37 +266,7 @@ public class LocalActivity extends Activity {
 		return serverItemLayout;
 	}
 
-	/*@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		Bundle bundle = data.getExtras();
-		long labelPrice = bundle.getLong("labelPrice", -1);
-		int pos = bundle.getInt("position", -1);
-		// updateLabelPrice(pos, labelPrice);
 
-	}*/
-
-	private void updateLabelPrice(int pos, long labelPrice) {
-		variations.get(pos).sellingPrice = labelPrice;
-		// TODO update in server and xml
-		genScrollView();
-	}
-/*
-	private List<Map<String, Object>> getData() {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		
-
-		Map<String, Object> map;
-		for (int i = 0; i < 6; i++) {
-			map = new HashMap<String, Object>();
-			map.put("title", "Item" + i);
-			map.put("img", R.drawable.piano);
-			list.add(map);
-			melodies.add("Variation"+Integer.toString(i)+".m4a");
-		}
-		return list;
-	}*/
-	
 	
 	@Override
 	public void onDestroy() {
@@ -325,6 +320,32 @@ public class LocalActivity extends Activity {
 			this.name = name;
 			this.purchasePrice = purchasePrice;
 			this.sellingPrice = sellingPrice;
+		}
+
+	}
+	
+	
+	class MPagerAdapter extends PagerAdapter {
+
+		@Override
+		public void destroyItem(View arg0, int arg1, Object arg2) {
+			((ViewPager) arg0).removeView(viewList.get(arg1));
+		}
+
+		@Override
+		public Object instantiateItem(View arg0, int arg1) {
+			((ViewPager) arg0).addView(viewList.get(arg1), 0);
+			return viewList.get(arg1);
+		}
+
+		@Override
+		public int getCount() {
+			return viewList.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == (arg1);
 		}
 
 	}
