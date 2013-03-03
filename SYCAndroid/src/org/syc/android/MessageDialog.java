@@ -38,11 +38,9 @@ public class MessageDialog extends Dialog {
 		messageTitle.setText(title);
 	}
 	
-	@Override
-	public void onBackPressed() {
+	public void setMessage(String message){
+		TextView messageContent = (TextView)findViewById(R.id.DialogMessageContent);
+		messageContent.setText(message);		
 	}
 	
-	
-	
-
 }

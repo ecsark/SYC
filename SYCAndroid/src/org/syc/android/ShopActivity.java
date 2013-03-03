@@ -3,22 +3,15 @@ package org.syc.android;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ShopActivity extends Activity {
 
@@ -114,23 +107,6 @@ public class ShopActivity extends Activity {
 		
 		//pd.setItem(name, price, price, 0xaf000000+Color.RED);
 		//pd.show();
-	}
-	
-	
-
-	
-	@Override
-	public void onBackPressed() {
-		MessageDialog exitDialog = new MessageDialog(this){
-			public void onOKPressed(){
-				Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                    vibrator.vibrate(200);  
-				finish();
-	            System.exit(0);
-			}
-		};
-		exitDialog.setTitle("Exit?");
-		exitDialog.show();
 	}
 
 }

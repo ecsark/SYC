@@ -2,52 +2,56 @@ package org.syc.android;
 
 import java.util.*;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Gallery;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LocalActivity extends Activity {
-
-	private Gallery mGallery;
-	private LinearLayout mScrollLayout;
-	private SimpleAdapter gallerySimpleAdapter;
-	private Vector<ListItem> list;
-	private TextView property, rank;
-
 	
+	private LayoutInflater inflater;
+	private LinearLayout variationScroll;
+	private LinearLayout melodyScroll;
+	
+	private ArrayList<ListItem> variations;
+	private ArrayList<String> melodiNames;
+	private ArrayList<String> fileNames;
+	
+	private TextView property, rank;
+	
+	private MediaPlayer player;
+	private boolean playWhenScroll = true;
+
+	private String melodyDirectory = Environment.getExternalStorageDirectory().getPath() + "/SYC/testmu/melodies/";
+	
+	private View prevItemView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_local);
+		setContentView(R.layout.activity_local);		
 
-		list = new Vector<LocalActivity.ListItem>();
-
-		mGallery = (Gallery) findViewById(R.id.gallery);
-		mScrollLayout = (LinearLayout) findViewById(R.id.list_scroll_view);
-		gallerySimpleAdapter = new SimpleAdapter(this, getData(),
-				R.layout.gallery_item, new String[] { "title", "img" },
-				new int[] { R.id.gallery_item_title, R.id.gallery_item_image });
-		// mGallery.setCallbackDuringFling(false);
-		mGallery.setAdapter(gallerySimpleAdapter);
-		mGallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				genList();
-				genScrollView();
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
+		inflater = LayoutInflater.from(this);
+		
+		player = new MediaPlayer();
+		
+		variations = new ArrayList<LocalActivity.ListItem>();
+		melodiNames = new ArrayList<String>();
+		fileNames = new ArrayList<String>();
+		
+		genMelodyList();
+		melodyScroll = (LinearLayout)findViewById(R.id.list_horizontal_scroll_view);
+		variationScroll = (LinearLayout) findViewById(R.id.list_scroll_view);
+		genMelodyScrollView();
 		
 		property = (TextView) findViewById(R.id.property);
 		rank = (TextView) findViewById(R.id.rank);
@@ -55,6 +59,7 @@ public class LocalActivity extends Activity {
 		updateProperty(3740);
 		updateRank(371);
 	}
+
 	
 	private void updateProperty(long value){
 		property.setText(Long.toString(value));
@@ -64,93 +69,148 @@ public class LocalActivity extends Activity {
 		rank.setText(Long.toString(value));
 	}
 	
-	private void genList() {
-		list.clear();
-		list.add(new ListItem(1L, "item1", getResources().getColor(
-				R.color.dark_blue), 50L, 50L));
-		list.add(new ListItem(2L, "item2", getResources().getColor(
-				R.color.dark_green), 50L, 65L));
-		list.add(new ListItem(3L, "item3", getResources().getColor(
-				R.color.light_green), 40L, 50L));
-		list.add(new ListItem(1L, "item4", getResources().getColor(
-				R.color.dark_blue), 75L, 80L));
-		list.add(new ListItem(2L, "item5", getResources().getColor(
-				R.color.dark_green), 90L, 85L));
-		list.add(new ListItem(3L, "item6", getResources().getColor(
-				R.color.light_green), 10L, 95L));
-		list.add(new ListItem(1L, "item7", getResources().getColor(
-				R.color.dark_blue), 5L, 75L));
-		list.add(new ListItem(2L, "item8", getResources().getColor(
-				R.color.dark_green), 65L, 70L));
-		list.add(new ListItem(3L, "item9", getResources().getColor(
-				R.color.light_green), 50L, 50L));
-
+	private void genMelodyList() {
+		melodiNames.clear();
+		for(int i=0; i<6; i++){
+			melodiNames.add("Item "+Integer.toString(i+1));
+			fileNames.add("Variation"+Integer.toString(i)+".m4a");
+		}
 	}
-
-	private void genScrollView() {
-		mScrollLayout.removeAllViews();
-
-		addShop(mScrollLayout);
-
-		for (int i = 0; i < list.size(); i++) {
-			final String iName = list.get(i).name;
-			final int iColor = list.get(i).color;
-			final long iPurchase = list.get(i).purchasePrice, iSelling = list
-					.get(i).sellingPrice;
-			final int pos = i;
-
+	
+	private void genList() {
+		variations.clear();
+		variations.add(new ListItem(1L, "item1", getResources().getColor(
+				R.color.dark_blue), 50L, 50L));
+		variations.add(new ListItem(2L, "item2", getResources().getColor(
+				R.color.dark_green), 50L, 65L));
+		variations.add(new ListItem(3L, "item3", getResources().getColor(
+				R.color.light_green), 40L, 50L));
+		variations.add(new ListItem(1L, "item4", getResources().getColor(
+				R.color.dark_blue), 75L, 80L));
+		variations.add(new ListItem(2L, "item5", getResources().getColor(
+				R.color.dark_green), 90L, 85L));
+		variations.add(new ListItem(3L, "item6", getResources().getColor(
+				R.color.light_blue), 10L, 95L));
+		variations.add(new ListItem(1L, "item7", getResources().getColor(
+				R.color.dark_blue), 5L, 75L));
+		variations.add(new ListItem(2L, "item8", getResources().getColor(
+				R.color.dark_green), 65L, 70L));
+		variations.add(new ListItem(3L, "item9", getResources().getColor(
+				R.color.red), 50L, 50L));
+	}
+	
+	
+	private void genMelodyScrollView() {
+		for (int i = 0; i < melodiNames.size(); i++) {
+			final String iName = melodiNames.get(i);
+			
 			LayoutInflater inflater = LayoutInflater.from(this);
-			LinearLayout scrollViewItem = (LinearLayout) inflater.inflate(
-					R.layout.local_item, null);
-			((LinearLayout) scrollViewItem)
-					.setOrientation(LinearLayout.HORIZONTAL);
-			LinearLayout block = (LinearLayout) scrollViewItem
-					.findViewById(R.id.itemColor);
-			block.setBackgroundColor(0xcf000000 + iColor);
-
-			TextView name = (TextView) scrollViewItem
-					.findViewById(R.id.itemName);
+			LinearLayout hsvItem = (LinearLayout) inflater.inflate(R.layout.gallery_item, null);			
+			
+			TextView name = (TextView)hsvItem.findViewById(R.id.gallery_item_title);
 			name.setText(iName);
+			
+			ImageView image = (ImageView)hsvItem.findViewById(R.id.gallery_item_image);
+			image.setBackgroundResource(R.drawable.piano_unselected);
 
-			TextView purchasePrice = (TextView) scrollViewItem
-					.findViewById(R.id.itemPurchasePrice);
-			purchasePrice.setText("$" + iPurchase);
-
-			TextView sellingPrice = (TextView) scrollViewItem
-					.findViewById(R.id.itemSellingPrice);
-			sellingPrice.setText("$" + iSelling);
-
-			scrollViewItem.setOnClickListener(new View.OnClickListener() {
+			hsvItem.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-
-					Intent intent = new Intent();
-					//intent.setClass(LocalActivity.this, PlayActivity.class);
-					intent.setClass(LocalActivity.this, PlayScrollActivity.class);
-					intent.putExtra("itemName", iName);
-					intent.putExtra("itemPrice", iPurchase);
-					intent.putExtra("labelPrice", iSelling);
-					intent.putExtra("color", iColor);
-					intent.putExtra("position", pos);
-					startActivityForResult(intent, 123);
-					overridePendingTransition(R.anim.zoom_enter,
-							R.anim.zoom_exit);
+					setImage(prevItemView, R.drawable.piano_unselected);
+					setImage(view, R.drawable.piano);
+					prevItemView = view;
+					genList();
+					genScrollView();
+					if(playWhenScroll){
+						int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+						playMusic(index);
+					}
 				}
 			});
 
-			mScrollLayout.addView(scrollViewItem);
+			melodyScroll.addView(hsvItem);
 		}
-
-		addServer(mScrollLayout);
+	}	
+	
+	private void setImage(View view, int res){
+		if(view == null)
+			return;
+		ImageView image = (ImageView)view.findViewById(R.id.gallery_item_image);
+		image.setBackgroundResource(res);
+	}
+	
+	private void playMusic(int index){
+			player.reset();
+			try {
+				player.setDataSource(melodyDirectory+fileNames.get(index));
+				player.prepare();
+				player.setLooping(true);
+				player.start();
+			} catch (Exception e) {
+				Toast.makeText(LocalActivity.this,
+						"Music Service Failed to start", Toast.LENGTH_LONG).show();
+				e.printStackTrace();			
+			}
 	}
 
-	private void addShop(LinearLayout scrollLayout) {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		LinearLayout goOut = (LinearLayout) inflater.inflate(R.layout.go_out,
+	
+	private void genScrollView() {
+		variationScroll.removeAllViews();
+
+		variationScroll.addView(getShopItemView());
+
+		for (int i = 0; i < variations.size(); i++)
+			variationScroll.addView(getVariationItemView(variations.get(i),i));
+
+		variationScroll.addView(getServerItemView());
+	}
+	
+	private LinearLayout getVariationItemView(ListItem item, int pos_row){
+		final String iName = item.name;
+		final int iColor = item.color;
+		final long iPurchase = item.purchasePrice, 
+				iSelling = item.sellingPrice;
+		final int pos = pos_row;
+
+		LinearLayout variationItemLayout = (LinearLayout) inflater.inflate(R.layout.local_item, null);
+		((LinearLayout) variationItemLayout).setOrientation(LinearLayout.HORIZONTAL);
+		LinearLayout block = (LinearLayout) variationItemLayout.findViewById(R.id.itemColor);
+		block.setBackgroundColor(0xcf000000 + iColor);
+
+		TextView name = (TextView) variationItemLayout.findViewById(R.id.itemName);
+		name.setText(iName);
+
+		TextView purchasePrice = (TextView) variationItemLayout.findViewById(R.id.itemPurchasePrice);
+		purchasePrice.setText("$" + iPurchase);
+
+		TextView sellingPrice = (TextView) variationItemLayout.findViewById(R.id.itemSellingPrice);
+		sellingPrice.setText("$" + iSelling);
+
+		variationItemLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+				Intent intent = new Intent();
+				intent.setClass(LocalActivity.this, PlayScrollActivity.class);
+				intent.putExtra("itemName", iName);
+				intent.putExtra("itemPrice", iPurchase);
+				intent.putExtra("labelPrice", iSelling);
+				intent.putExtra("color", iColor);
+				intent.putExtra("position", pos);
+				startActivityForResult(intent, 123);
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			}
+		});
+		
+		return variationItemLayout;
+	}
+
+	private LinearLayout getShopItemView() {
+		LinearLayout shopItemLayout = (LinearLayout) inflater.inflate(R.layout.shop_server,
 				null);
-		TextView textView = (TextView) goOut.findViewById(R.id.goLabel);
+		TextView textView = (TextView) shopItemLayout.findViewById(R.id.goLabel);
 		textView.setText("SHOP");
-		goOut.setOnClickListener(new View.OnClickListener() {
+		shopItemLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent();
@@ -160,16 +220,15 @@ public class LocalActivity extends Activity {
 				overridePendingTransition(R.anim.slide2, R.anim.slide1);
 			}
 		});
-		scrollLayout.addView(goOut);
+		return shopItemLayout;
 	}
 
-	private void addServer(LinearLayout scrollLayout) {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		LinearLayout goOut = (LinearLayout) inflater.inflate(R.layout.go_out,
+	private LinearLayout getServerItemView() {
+		LinearLayout serverItemLayout = (LinearLayout) inflater.inflate(R.layout.shop_server,
 				null);
-		TextView textView = (TextView) goOut.findViewById(R.id.goLabel);
+		TextView textView = (TextView) serverItemLayout.findViewById(R.id.goLabel);
 		textView.setText("SERVER");
-		goOut.setOnClickListener(new View.OnClickListener() {
+		serverItemLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent();
@@ -179,10 +238,10 @@ public class LocalActivity extends Activity {
 				overridePendingTransition(R.anim.slide2, R.anim.slide1);
 			}
 		});
-		scrollLayout.addView(goOut);
+		return serverItemLayout;
 	}
 
-	@Override
+	/*@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Bundle bundle = data.getExtras();
@@ -190,16 +249,17 @@ public class LocalActivity extends Activity {
 		int pos = bundle.getInt("position", -1);
 		// updateLabelPrice(pos, labelPrice);
 
-	}
+	}*/
 
 	private void updateLabelPrice(int pos, long labelPrice) {
-		list.get(pos).sellingPrice = labelPrice;
+		variations.get(pos).sellingPrice = labelPrice;
 		// TODO update in server and xml
 		genScrollView();
 	}
-
+/*
 	private List<Map<String, Object>> getData() {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
 
 		Map<String, Object> map;
 		for (int i = 0; i < 6; i++) {
@@ -207,8 +267,48 @@ public class LocalActivity extends Activity {
 			map.put("title", "Item" + i);
 			map.put("img", R.drawable.piano);
 			list.add(map);
+			melodies.add("Variation"+Integer.toString(i)+".m4a");
 		}
 		return list;
+	}*/
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		player.release();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		player.stop();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		player.pause();
+	}
+
+	
+	
+	@Override
+	public void onBackPressed() {
+		MessageDialog exitDialog = new MessageDialog(this){
+			public void onOKPressed(){
+				Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    vibrator.vibrate(200);  
+				finish();
+	            System.exit(0);
+			}
+			public void onBackPressed(){
+				dismiss();
+			}
+		};
+		exitDialog.setTitle("Exit?");
+		exitDialog.setMessage("Are you sure to quit the game?");
+		exitDialog.show();
 	}
 
 	private class ListItem {

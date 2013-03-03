@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal" 
-    android:layout_gravity="left">
+    android:layout_gravity="left"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
    <LinearLayout
         android:id="@+id/itemColor"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/block" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="15dp" />
 
     <TextView
         android:id="@+id/itemName"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp" 
-        android:textSize="20dp"
-        android:paddingLeft="5dp"/>
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/itemPurchasePrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:textSize="20dp"
-        android:paddingLeft="5dp"/>
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/itemSellingPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:textSize="20dp"
-        android:paddingLeft="5dp"/>
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
 
 </LinearLayout>

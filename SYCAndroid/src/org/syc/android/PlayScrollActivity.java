@@ -29,7 +29,7 @@ public class PlayScrollActivity extends Activity {
 	String itemName;
 	long itemPrice, labelPrice;
 	int color;
-	String filepath = Environment.getExternalStorageDirectory().getPath() + "/"
+	String filepath = Environment.getExternalStorageDirectory().getPath() + "/SYC/testmu/variations/"
 			+ "Bach.mid";
 
 	MediaPlayer player;
