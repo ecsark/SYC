@@ -11,30 +11,30 @@ import Framework.Util.NetTool;
 
 public class TransactionItem implements Serializable
 {
-	private static final long serialVersionUID = -8585218298022422187L;
+	private static final long serialVersionUID = 1L;
 	protected final long id;
-	protected final long sellerId;
+	transient protected final String sellerName;
 	protected final Item item;
 	protected final long price;
 	
-	public TransactionItem(long id, long sellerId, Item item, long price)
+	public TransactionItem(long id, String sellerName, Item item, long price)
 	{
 		this.id = id;
-		this.sellerId = sellerId;
+		this.sellerName = sellerName;
 		this.item = item;
 		this.price = price;
 	}
     public TransactionItem(TransactionItem trans)
     {
     	this.id = trans.id;
-    	this.sellerId = trans.sellerId;
+    	this.sellerName = trans.sellerName;
     	this.item = new Item(trans.item);
     	this.price = trans.price;
     }
     public TransactionItem()
     {
     	this.id = 0;
-    	this.sellerId = 0L;
+    	this.sellerName = "";
     	this.item = new Item();
     	this.price = 0;
     }
@@ -42,9 +42,9 @@ public class TransactionItem implements Serializable
     {
     	return id;
     }
-    public long getSellerId()
+    public String getSellerName()
     {
-    	return sellerId;
+    	return sellerName;
     }
     public Item getItem()
     {

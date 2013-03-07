@@ -15,14 +15,31 @@ public class Interface
 {
 	public static User user = new User();
 	public static Auction auction = new Auction();
-	public static ItemList itemList = new ItemList();
-	public static ItemList originalMusicList = new ItemList();
+	public static MusicList itemList;
+	public static OriginalMusicList oML = new OriginalMusicList();
 	
+	public static ReturnInfo refreshOriginalMusicList()
+	{
+		Object inObj = NetTool.Receive(Command.FETCH_ORINGIN_LIST, user.id);
+		long[] list;
+		if(inObj != null)
+		{
+			list = (long[])inObj;
+			for (int i = 0; i < list.length; i++) 
+			{
+				oML.add(new OriginalMusic(list[i], "test", false));
+			}
+			return ReturnInfo.SUCCESS;
+		}
+		else{
+			return ReturnInfo.UNKNOWN_EXPECTION;
+		}
+	}
 	
 	///交易相关
 	public static ReturnInfo getTransItemList()
 	{
-		Object inObj = NetTool.Receive(Command.GET_COMMODITY_LIST, auction.args.toStringArray(), user.getId());
+		Object inObj = NetTool.Receive(Command.GET_COMMODITY_LIST, auction.args.toStringArray(), user.id);
 		if(inObj != null)
 		{
 			auction.list = (TransactionItemList)inObj;
@@ -34,12 +51,12 @@ public class Interface
 	}
 	/*fin*/
 	/**ATTENTION: UI must refresh the List & auction UI after this func**/
-	public static ReturnInfo makeTransaction(TransactionItem tItem)
+	public static ReturnInfo makeTransaction(TransactionItem trans)
 	{
-		ReturnInfo returnInfo = NetTool.send(Command.BUY, tItem, user.getId());
+		ReturnInfo returnInfo = NetTool.send(Command.BUY, trans, user.id);
 		//do Local
-		if(returnInfo == ReturnInfo.SUCCESS)
-			itemList.add(tItem.getItem());
+		/*if(returnInfo == ReturnInfo.SUCCESS)
+			user.itemList.add(trans.item);*/
 		return returnInfo;
 	}
 	/*fin*/
@@ -48,36 +65,23 @@ public class Interface
 	{
 		ReturnInfo returnInfo = NetTool.send(Command.SELL, tItem, user.id);
 		//do Local
-		if(returnInfo == ReturnInfo.SUCCESS)
-			itemList.searchId(tItem.getItem().getId()).setAuction();
+	//	if(returnInfo == ReturnInfo.SUCCESS)
+	//		user.itemList.searchId(tItem.getItem().getId()).setAuction();
 		return returnInfo;
 	}
 	/*fin*/
 	/**ATTENTION: UI must refresh the List & auction UI after this func**/
 	public static ReturnInfo cancelSellItem(TransactionItem tItem)
 	{
-		ReturnInfo returnInfo = NetTool.send(Command.HOLDON, tItem, user.getId());
-		if(returnInfo == ReturnInfo.SUCCESS)
-			itemList.searchId(tItem.getItem().getId()).resetAuction();
+		ReturnInfo returnInfo = NetTool.send(Command.HOLDON, tItem, user.id);
+		//if(returnInfo == ReturnInfo.SUCCESS)
+		//	user.itemList.searchId(tItem.getItem().getId()).resetAuction();
 		return returnInfo;
 	}
-	
-	public static ReturnInfo refreshSellingList()
-	{
-		Object inObj = NetTool.Receive(Command.FETCH_SELLING_LIST, user.getId());
-		if(inObj != null)
-		{
-			auction.sellingList = (TransactionItemList)inObj;
-			return ReturnInfo.SUCCESS;
-		}
-		else{
-			return ReturnInfo.UNKNOWN_EXPECTION;
-		}
-	}
 	///奖励
-	public static ReturnInfo getReward()
+	/*public static ReturnInfo getMoney()
 	{
-		Object inObj = NetTool.Receive(Command.GET_REWARD, user.id);
+		Object inObj = NetTool.Receive(Command.GET_MONEY, user.id);
 		if(inObj != null)
 		{
 			user.setProperty((long)inObj);
@@ -86,20 +90,24 @@ public class Interface
 		else {
 			return ReturnInfo.UNKNOWN_EXPECTION;
 		}
-	}
+	}*/
 	///=========================================================================
 	///User相关
 	/*fin*/
 	public static ReturnInfo login()
 	{
-		long id = (long)NetTool.receiveByName(Command.FETCH_ID, user.getName());
+		long id = NetTool.getId(user.getName());
+		System.out.println(id);
 		if(id != 0L && id != -1L)
+		{
 			user.setId(id);
+			
+		}
 		else if(id == -1L)
 			return ReturnInfo.REQUEST_TIMEOUT;
 		else 
 			return ReturnInfo.UNKNOWN_EXPECTION;
-		ReturnInfo returnInfo = NetTool.send(Command.LOGIN, user.getPassword(), user.getId());
+		ReturnInfo returnInfo = NetTool.send(Command.LOGIN, user.getPassword(), user.id);
 		if(returnInfo == ReturnInfo.SUCCESS)
 		{
 			refreshProperty();
@@ -110,7 +118,7 @@ public class Interface
 	/*fin*/
 	public static ReturnInfo logout()
 	{
-		ReturnInfo returnInfo = NetTool.send(Command.LOGOUT, null, user.getId());
+		ReturnInfo returnInfo = NetTool.send(Command.LOGOUT, null, user.id);
 		if(returnInfo == ReturnInfo.SUCCESS)
 			user = new User();
 			auction = new Auction();
@@ -119,14 +127,14 @@ public class Interface
 	/*fin*/
 	public static ReturnInfo regist()
 	{
-		ReturnInfo returnInfo = NetTool.send(Command.NEW_ACCOUNT, user, user.getId());		
+		ReturnInfo returnInfo = NetTool.send(Command.NEW_ACCOUNT, user, user.id);		
 		return returnInfo;
 	}
 
 	/*fin*/
 	public static ReturnInfo refreshProperty()
 	{
-		Object inObj = NetTool.Receive(Command.SHOW_MONEY, user.getId());
+		Object inObj = NetTool.Receive(Command.SHOW_MONEY, user.id);
 		if(inObj != null)
 		{
 			user.setProperty((long)inObj);
@@ -139,7 +147,7 @@ public class Interface
 	/*fin*/
 	public static ReturnInfo refreshRank()
 	{
-		Object inObj = NetTool.Receive(Command.SHOW_RANK, user.getId());
+		Object inObj = NetTool.Receive(Command.SHOW_RANK, user.id);
 		if(inObj != null)
 		{
 			user.setRank((long)inObj);
@@ -152,40 +160,21 @@ public class Interface
 	
 	public static ReturnInfo refreshItemList()
 	{
-		Object inObj = NetTool.Receive(Command.FETCH_PROPERTY_LIST, user.getId());
+		Object inObj = NetTool.Receive(Command.FETCH_PROPERTY_LIST, user.id);
 		if(inObj != null)
 		{
-			itemList = new ItemList((ItemList)inObj);
+		//	user.itemList = new ItemList((ItemList)inObj);
 			return ReturnInfo.SUCCESS;
 		}
 		else {
 			return ReturnInfo.UNKNOWN_EXPECTION;
 		}
 	}
-	
-	public static ReturnInfo refreshOriginalMusicList()
-	{
-		Object inObj = NetTool.Receive(Command.FETCH_ORINGIN_LIST, user.getId());
-		long[] list;
-		if(inObj != null)
-		{
-			list = (long[])inObj;
-			for (int i = 0; i < list.length; i++) 
-			{
-				originalMusicList.add(new OriginalMusic(list[i], "test", false));
-			}
-			return ReturnInfo.SUCCESS;
-		}
-		else{
-			return ReturnInfo.UNKNOWN_EXPECTION;
-		}
-	}
 	/*fin*/
 	/**ATTENTION: When the server error occurs, the func also return false**/
-	public static boolean nameConfliction()
+	/*public static boolean nameConfliction()
 	{
-		
-		Object inObj = NetTool.receiveByName(Command.NAME_CONFLICT, user.getName());
+		Object inObj = NetTool.Receive(Command.NAME_CONFLICT, user.id);
 		if(inObj != null)
 		{
 			return (boolean)inObj;
@@ -193,6 +182,9 @@ public class Interface
 		else{
 			return false;
 		}
-	}	
+	}*/
+	/*fin*/
+	
+	
 	
 }

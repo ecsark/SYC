@@ -18,7 +18,6 @@ import Framework.Kernel.User;
 import Framework.Util.NetTool;
 import Framework.*;
 import MusicTradingSystem.Item.Music;
-import MusicTradingSystem.Item.MusicList;
 import MusicTradingSystem.Item.OriginalMusic;
 
 
@@ -28,7 +27,7 @@ public class Test
 	{
 		try 
 		{
-			NetTool.serverIP = InetAddress.getByName("10.147.106.30");
+			NetTool.serverIP = InetAddress.getByName("175.186.54.213");
 		} 
 		catch (UnknownHostException e) 
 		{
@@ -37,19 +36,16 @@ public class Test
 		NetTool.serverPort = 5678;
 		//networkTest();
 		//regist("wuhao", "123456");
-		Interface.user.setName("123");
-		System.out.println(Interface.nameConfliction());
-		//login("wuhao", "123456");
-		
+		login("wuhao", "123456");
 		//Interface.user.setId(NetTool.getId("wuhao"));
 		//logout();
+		//login("wuhao", "123456");
 		//printUser(Interface.user);
 		//Interface.user.setId(NetTool.getId("wuhao"));
 		//Interface.refreshRank();
 		//System.out.println(Interface.user.getRank());
 		//System.out.println(NetTool.getId("wuhao"));
 		//refreshItemList();
-		//printMusicList(Interface.itemList);
 		//printItemList(Interface.user.itemList);
 		//sellItem(0, 100);
 		//printItemList(Interface.user.itemList);
@@ -60,29 +56,13 @@ public class Test
 		//TransactionItem tItem = new TransactionItem(001L, "123", music, 9999L);
 		//Music music2 = (Music)tItem.getItem();
 		//printMusic(music2);
-		//test();
+		test();
 		
-		//getTransactionList();
-		//printTransactionItemList(Interface.auction.list);
-		//makeTransaction(Interface.auction.list.get(1));
-		/*refreshItemList();
-		printMusicList(Interface.itemList);
-		sellItem(3, 88L);
-		printMusicList(Interface.itemList);
-		refreshSellingList();
-		printTransactionItemList(Interface.auction.sellingList);
-		cancelSellItem(Interface.auction.sellingList.get(0));
-		printMusicList(Interface.itemList);*/
-		//getReward();
-		//printUser(Interface.user);
-	
 	}
 	
 	private static void test()
 	{
 		TransactionItem tItem = (TransactionItem)NetTool.Receive(Command.TEST, Interface.user.getId());
-		if(tItem == null)
-			System.out.println("\n\n>>ITEM IS NULL!");
 		Music music = (Music)(tItem.getItem());
 		printMusic(music);
 	}
@@ -93,13 +73,13 @@ public class Test
 		Interface.user.setPassword(password);
 		ReturnInfo rtnInfo = Interface.regist();
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>REGIST SUCCESS!");
+			System.out.println(">>REGIST SUCCESS!");
 		else if(rtnInfo == ReturnInfo.NAME_CONFLICT)
 		{
-			System.out.println("\n\n>>NAME CONFLICT!");
+			System.out.println(">>NAME CONFLICT!");
 		}
 		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}
 	}
 	
@@ -109,17 +89,17 @@ public class Test
 		Interface.user.setPassword(password);
 		ReturnInfo rtnInfo = Interface.login();
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>LOGIN SUCCESS!");
+			System.out.println(">>LOGIN SUCCESS!");
 		else if(rtnInfo == ReturnInfo.NAME_CONFLICT)
 		{
-			System.out.println("\n\n>>NAME CONFLICT!");
+			System.out.println(">>NAME CONFLICT!");
 		}
 		else if(rtnInfo == ReturnInfo.REQUEST_TIMEOUT)
 		{
-			System.out.println("\n\n>>REQUEST TIMEOUT!");
+			System.out.println(">>REQUEST TIMEOUT!");
 		}
 		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}		
 	}
 	
@@ -127,9 +107,9 @@ public class Test
 	{
 		ReturnInfo rtnInfo = Interface.logout();
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>LOGOUT SUCCESS!");
+			System.out.println(">>LOGOUT SUCCESS!");
 		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}		
 	}
 	
@@ -137,20 +117,20 @@ public class Test
 	{
 		ReturnInfo rtnInfo = Interface.refreshItemList();
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>REFRESH ITEMLIST SUCCESS!");
+			System.out.println(">>REFRESH ITEMLIST SUCCESS!");
 		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}	
 	}
 	
 	public static void sellItem(int i,long price)
 	{
-		TransactionItem tItem = new TransactionItem(0,0L,Interface.itemList.get(i),price);
+		TransactionItem tItem = new TransactionItem(0,"",Interface.itemList.get(i),price);
 		ReturnInfo rtnInfo = Interface.SellItem(tItem);
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>SELLITEM SUCCESS!");
+			System.out.println(">>SELLITEM SUCCESS!");
 		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}	
 	}
 	
@@ -158,19 +138,9 @@ public class Test
 	{
 		ReturnInfo rtnInfo = Interface.cancelSellItem(tItem);
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>CANCEL SELLITEM SUCCESS!");
+			System.out.println(">>SELLITEM SUCCESS!");
 		else {
-			System.out.println("\n\n>>FAIL!");
-		}	
-	}
-	
-	public static void refreshSellingList()
-	{
-		ReturnInfo rtnInfo = Interface.refreshSellingList();
-		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>REFRESH SELLINGITEMLIST SUCCESS!");
-		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}	
 	}
 	
@@ -178,40 +148,9 @@ public class Test
 	{
 		ReturnInfo rtnInfo = Interface.refreshOriginalMusicList();
 		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>REFRESH ORGIN MUSIC LIST SUCCESS!");
+			System.out.println(">>REFRESH ORGIN MUSIC LIST SUCCESS!");
 		else {
-			System.out.println("\n\n>>FAIL!");
-		}	
-	}
-	
-	public static void getTransactionList()
-	{
-		Interface.auction.args.musicSrcID = 10L;
-		ReturnInfo rtnInfo = Interface.getTransItemList();
-		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>GET TRANSACTIONLIST SUCCESS!");
-		else {
-			System.out.println("\n\n>>FAIL!");
-		}	
-	}
-	
-	public static void makeTransaction(TransactionItem tItem)
-	{
-		ReturnInfo rtnInfo = Interface.makeTransaction(tItem);
-		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>MAKE TRANSACTIONLIST SUCCESS!");
-		else {
-			System.out.println("\n\n>>FAIL!");
-		}	
-	}
-	
-	public static void getReward()
-	{
-		ReturnInfo rtnInfo = Interface.getReward();
-		if(rtnInfo == ReturnInfo.SUCCESS)
-			System.out.println("\n\n>>GET REWARD SUCCESS!");
-		else {
-			System.out.println("\n\n>>FAIL!");
+			System.out.println(">>FAIL!");
 		}	
 	}
 	///////////////////////////////////////////////////////////////////////
@@ -220,7 +159,7 @@ public class Test
 		System.out.println("id: "+user.getId());
 		System.out.println("name: "+user.getName());
 		System.out.println("money "+user.getProperty());
-		System.out.println("rank: #"+user.getRank()+"\n");
+		System.out.println("rank: #"+user.getRank());
 	}
 	
 	private static void printItemList(ItemList itemList)
@@ -253,16 +192,9 @@ public class Test
 	private static void printTransactionItem(TransactionItem tItem)
 	{
 		System.out.println("tItemId: "+tItem.getId());
-		printMusic((Music)tItem.getItem());
+		printItem(tItem.getItem());
 		System.out.println("price: "+tItem.getPrice());
-		System.out.println("sellerId: "+tItem.getSellerId() +"\n");
+		System.out.println("sellerName: "+tItem.getSellerName());
 	}
-	
-	private static void printMusicList(ItemList mL)
-	{
-		for(int i=0; i<mL.size(); i++)
-		{
-			printMusic((Music)mL.get(i));
-		}
-	}
+
 }

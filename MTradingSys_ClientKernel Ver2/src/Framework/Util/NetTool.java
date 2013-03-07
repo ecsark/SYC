@@ -24,18 +24,21 @@ public class NetTool
 	public static int serverPort;
 	public static int timeout = 5000;
 	
-	public static Object receiveByName(int cmd, String userName)
+	public static long getId(String userName)
 	{
-		Socket socket=new Socket();
 		try
 		{	
-			socket.connect(new InetSocketAddress(serverIP, serverPort),timeout);
+			/*Socket socket=new Socket();
+			socket.setSoTimeout(timeout);
+			socket.connect(new InetSocketAddress(serverIP, serverPort));*/
+			Socket socket = new Socket(serverIP, serverPort);
+			socket.setSoTimeout(timeout);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			//send cmd
-			oos.writeObject(cmd);
+			oos.writeObject(Command.FETCH_ID);
 			oos.flush();
-			//send void userId, just for format
+			//send invalid userId, just for format
 			oos.writeObject(0L);
 			oos.flush();
 			//send userName
@@ -47,40 +50,30 @@ public class NetTool
 			oos.writeObject(ReturnInfo.SUCCESS);
 			oos.flush();
 			socket.close();
-			return inObj;
+			return (long)inObj;
 		} 
 		catch (SocketTimeoutException e)
 		{
 			System.out.println("timeout");
-			return null;
+			return -1L;
 		}
 		catch(IOException e)
 		{
-			return null;
+			System.out.println("ioexcption");
+			return 0L;
 		} 
 		catch (ClassNotFoundException e) 
 		{
-			return null;
-		}
-		finally
-		{
-			try
-			{
-				if(socket != null)
-					socket.close();				
-			}
-			catch(IOException e)
-			{
-				return null;
-			}
+			System.out.println("class not found");
+			return 0L;
 		}
 	}
 	public static ReturnInfo send(int cmd, Object obj, long userId)
 	{
-		Socket socket=new Socket();
 		try
 		{	
-			socket.connect(new InetSocketAddress(serverIP, serverPort),timeout);
+			Socket socket=new Socket(serverIP, serverPort);
+			socket.setSoTimeout(timeout);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			//send cmd
@@ -105,31 +98,17 @@ public class NetTool
 		{
 			return ReturnInfo.IO_EXCEPTION;
 		} 
-		catch (ClassNotFoundException e) 
-		{
+		catch (ClassNotFoundException e) {
 			return ReturnInfo.CLASS_NOT_FOUND;
-		}
-		finally
-		{
-			try
-			{
-				if(socket != null)
-					socket.close();				
-			}
-			catch(IOException e)
-			{
-				return ReturnInfo.UNKNOWN_EXPECTION;
-			}
-		}
-		
+		} 
 	}
 	
 	public static Object Receive(int cmd, long userId)
 	{
-		Socket socket=new Socket();
 		try
 		{	
-			socket.connect(new InetSocketAddress(serverIP, serverPort),timeout);
+			Socket socket=new Socket(serverIP, serverPort);
+			socket.setSoTimeout(timeout);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			//send cmd
@@ -158,26 +137,14 @@ public class NetTool
 		{
 			return null;
 		}
-		finally
-		{
-			try
-			{
-				if(socket != null)
-					socket.close();				
-			}
-			catch(IOException e)
-			{
-				return ReturnInfo.UNKNOWN_EXPECTION;
-			}
-		}
 	}
 	/**String[]: SourceId, long lowerBound, long upperBund, int pageNum**/
 	public static Object Receive(int cmd, String[] args, long userId )
 	{
-		Socket socket=new Socket();
 		try
 		{	
-			socket.connect(new InetSocketAddress(serverIP, serverPort),timeout);
+			Socket socket=new Socket(serverIP, serverPort);
+			socket.setSoTimeout(timeout);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			//send cmd
@@ -208,18 +175,6 @@ public class NetTool
 		catch (ClassNotFoundException e) 
 		{
 			return null;
-		}
-		finally
-		{
-			try
-			{
-				if(socket != null)
-					socket.close();				
-			}
-			catch(IOException e)
-			{
-				return ReturnInfo.UNKNOWN_EXPECTION;
-			}
 		}
 	}
 
